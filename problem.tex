@@ -1,10 +1,14 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{amsthm}
+\usepackage[yyyymmdd]{datetime}
 \theoremstyle{definition}
-\newtheorem{example}{Example}
 
-\title{The Airport Commute Problem}
+\newtheorem*{example}{Example}
+\newtheorem*{solution}{Solution}
+\newtheorem*{osolution}{Optimal Solution}
+
+\title{The Traveler's Problem}
 \author{Iva Babukova}
 \date{July 2016}
 
@@ -12,7 +16,7 @@
 \maketitle
 In this work we present the Traveler's Problem (TP), a computational task whose extensions and variations are often encountered by travelers around the world. The task is concerned with creating a valid travel schedule, using airplanes as a means of transportation and in accordance with certain constraints specified by the traveler.
 
-Each instance of TP consits of:
+Each instance of TP consists of:
 
 \begin{enumerate}
 \item A set of airports. Airports represent locations a traveler can begin their commute in, visit as a desired destination, or connect in on the way to their destination.
@@ -38,17 +42,80 @@ We note that the specification of TP as presented above may not reflect requirem
 
 It is therefore suggested that any attempt at an investigation of TP assumes as an additional non-functional requirement, that any proposed model to solve TP is flexible and can be easily extended by adding, removing and modifying soft and hard constraints.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=5cm, height=4cm]{destinations0.png}
-\end{figure}
+%TP is interesting both practically and theoretically. We therefore give two presentations of the same instance of the problem. One in form of a user story, which should be familiar to many software engineers, and one stated more formally, targeted at algorithmicians.
 
-TP is interesting both practically and theoretically. We therefore give two presentations of the same instance of the problem. One in form of a user story, which should be familiar to many software engineers, and one stated more formally, targeted at algorithmicians.
+We present an example instance of TP and its most optimal solution.
 
 \begin{example}
-Adam lives in Glasgow and he will be on holiday for two weeks, starting from the 1st of August. He wants to find the cheapest way to visit Milano, Berlin, Amsterdam and Paris by plane. Adam wants to spend no less than 3 days in each city and does not have any preference on the order in which he visits cities. %However, there are particular events which Adam does not want to miss out. In particular, on 5th of August there is a bierfest in Berlin and on 10th of August there is a festival in Paris.
-Adam can start his trip from the evening on 31st of August and he must be back to Glasgow by the evening on 14th of August. Adam does not have any preferences on the choice of airline company.
+Adam is on holiday from 1st of August until and including 14th of August. He wants to go to Milan Malpensa, Berlin Tegel, Amsterdam and Paris Orly. His starting point is Glasgow International. Adam can visit the following airports during his trip:
+\begin{itemize}
+\item Glasgow International (G)
+\item Berlin Tegel (B)
+\item Milan Malpensa (M)
+\item Amsterdam (A)
+\item Paris Orly (P)
+\item Frankfurt am Main (F)
+\item London Heathrow (L)
+\end{itemize}
+All available flights that arrive to and depart from these airports are listed on Table\ref{table:flights}.
+
+\begin{table}
+\centering
+\renewcommand{\arraystretch}{1.4}% Spread rows out...
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+Flight No & \textbf{Departs} & \textbf{Arrives} & \textbf{Date} & \textbf{Price ($\pounds$)} \\
+\hline
+GA1 & G & A & \date{1 August} & 74 \\
+\hline
+GF1 & G & F & \date{1 August} & 86 \\
+\hline
+GL3 & G & L & \date{3 August} & 25 \\
+\hline
+AP4 & A & P & \date{4 August} & 58 \\
+\hline
+LG14 & L & G & \date{14 August} & 24 \\
+\hline
+PL12 & P & L & \date{12 August} & 45 \\
+\hline
+PM6 & P & M & \date{6 August} & 71 \\
+\hline
+MF9 & M & F & \date{9 August} & 39 \\
+\hline
+FB11 & F & B & \date{11 August} & 122 \\
+\hline
+FM8 & F & M & \date{8 August} & 234 \\
+\hline
+BG13 & B & G & \date{13 August} & 335 \\
+\hline
+BL13 & B & L & \date{13 August} & 102 \\
+\hline
+\end{tabular}
+\caption{List of flights with departure and arrival airports, flight date and price}
+\label{table:flights}
+\end{table}
 \end{example}
+
+\begin{solution}
+A valid solution of the TP instance in the example above is the sequence of flights $s$, where the each flight is represented by its flight number, specified in the first column of Table \ref{table:flights}:
+
+$$ s = \{GA1, AP4, PM6, MF9, FB11, BG13\} $$
+
+The total sum of the prices of the flights in $s$ is $\pounds$699.
+
+\end{solution}
+
+\begin{osolution}
+The optimal solution of the example TP instance is the sequence of flightd $s^{\prime}$, where the each flight is represented by its flight number, specified in the first column of Table \ref{table:flights}:
+
+$$ s^{\prime} = \{GA1, AP4, PM6, MF9, FB11, BL13, LG14\} $$
+
+The total sum of the prices of the flights in $s^{\prime}$ is $\pounds$483.
+
+$s^{\prime}$ is the optimal solution, as the total cost of the flights is minimised. In both $s$ and $s^{\prime}$, airport F is connection. $s^{\prime}$ used a second connection, that is L.
+\end{osolution}
+
+In this work, we present the traveler's problem (TP). An instance of the problem serves as a worked example, for which two possible solutions are given, one of which is optimal. We have not found any extensive study on TP and its variations in the existing literature. An investigation of this problem could be of both theoretical and practical interest.
 
 \end{document}
 
