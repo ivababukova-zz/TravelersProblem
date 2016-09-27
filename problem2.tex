@@ -1,0 +1,145 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage[yyyymmdd]{datetime}
+\theoremstyle{definition}
+
+\newtheorem*{example}{Example}
+\newtheorem*{solution}{Solution}
+\newtheorem*{osolution}{Optimal Solution}
+
+\title{The Traveler's Problem}
+\author{Iva Babukova}
+\date{September 2016}
+
+\begin{document}
+\maketitle
+
+In this work we present the Traveler's Problem (TP), a computational task whose extensions and variations are often encountered by travelers around the world. The task is concerned with creating a valid travel schedule, using airplanes as a means of transportation and in accordance with certain constraints specified by the traveler.
+
+\section{Problem Formulation}
+Each instance of TP consists of:
+
+\begin{enumerate}
+\item A set of airports $A$. Each airport $a_{i}$ (for $0\leq i<|A|$) represents a location a traveler can begin their commute in, visit as a desired destination, or connect in on the way to their destination.
+\item A set of flights $F$, where each flight includes arrival and departure airports, as well as a price and a date. A flight from airport $a_{i}$ to an airport $a_{j}$ is denoted as $f_{ij}$. The price of $f_{ij}$ at date $d$ is $c_{ijd}$.
+\item The starting point airport, which is denoted as $a_{0}$ and is also the last destination. We refer to $a_{0}$ as the \textit{home point}.
+\item A set of destinations $D$ that the traveler must visit, where $D \subseteq A$.
+\item A total number of days $T$ within which all destinations have to be visited and the traveler has to be at the home point.
+\end{enumerate}
+
+A solution to any instance of TP is a sequence $s$ of valid flights, ${f_{1}, f_{2}, ..., f_{k}}$, where $k$ is equal to the cardinality of $s$. We say that a sequence contains valid flights if the flights in the sequence have the following properties:
+
+\begin{enumerate}
+%The departure airport of the first flight in $s$, $f_{1}$, is equal to the arrival airport of the last flight in $s$, $f_{k}$ is equal to the starting point.
+\item The first flight departure airport and the last flight arrival airport must be both equal to the home point. In particular, $f_{1}$ is equal to $f_{0jt}$ and $f_{k}$ is equal to $f_{i0t\prime}$, where $t < t\prime$.
+\item For any two consecutive flights in $s$: $f_{i}$, $f_{i+1}$, we have that the arrival airport of $f_{i}$ is equal to the departure airport of $f_{i+1}$. 
+\item The flights in $s$ have dates, which occur in increasing, temporal order (flights earlier in the list happen earlier in time).
+\item All destinations the traveler wants to visit are included in at least one flight from $s$.
+\end{enumerate}
+
+An optimal solution is a solution which minimizes the total sum of flight's prices%, that is $\sum_{f} c(f)$ is minimal, for $ all f \in s$.
+Any solution (including any optimal solution) may include airports a traveler has not specified on their list of destinations. Such airports are called connections.
+
+\section{Hard and Soft Constraints}
+%%We note that the specification of TP as presented above may not reflect requirements of many travelers.
+
+Travelers may have additional preferences (soft constraints) and requirements (hard constraints) with regards to their travel. In this Section we first give a list of all hard constraints and then give some examples of soft constraints.
+
+\subsection{Hard Constraints}
+The traveler can specify a minimum number of days they want to spend in a given destination $a_{i}$, denoted as $t_{i}$. If $t_{i}$ is equal to 0, then the traveler is indifferent of the number of days spent in $a_{i}$. To mark that $a_{i}$ is not one of their destinations, the traveler sets $t_{i}$ to -1. In such case, a flight to $a_{i}$ would only serve connection purposes. 
+%% do we specify that for the home point??? If yes, how do we deal with possibly having two different numbers pointing to t0???
+
+Travelers may require to spend a given date at a given destination, for example due to an event occurring on that date in this destination. Additionally, connections may be penalized by some users, perhaps with penalty proportional to the waiting time. The traveler may have a certain price threshold (budget), such that if the total travel cost exceeds that threshold the traveler will discard a solution as invalid.
+
+It is therefore suggested that any attempt at an investigation of TP assumes as an additional non-functional requirement, that any proposed model to solve TP is flexible and can be easily extended by adding, removing and modifying soft and hard constraints.
+
+TP is interesting both practically and theoretically. We therefore give two presentations of the same instance of the problem. One in form of a user story, which should be familiar to many software engineers, and one stated more formally, targeted at algorithmicians.
+
+\section{Soft Constraints}
+% trade off an additional day at a destination for increase in total travel price.
+
+\section{Worked Example}
+We present an example instance of TP and its most optimal solution.
+
+\begin{example}
+Adam is on holiday from 1st of August until and including 14th of August. He wants to go to Milan Malpensa, Berlin Tegel, Amsterdam and Paris Orly. His starting point is Glasgow International. Adam can visit the following airports during his trip:
+\begin{itemize}
+\item Glasgow International (G)
+\item Berlin Tegel (B)
+\item Milan Malpensa (M)
+\item Amsterdam (A)
+\item Paris Orly (P)
+\item Frankfurt am Main (F)
+\item London Heathrow (L)
+\end{itemize}
+All available flights that arrive to and depart from these airports are listed on Table\ref{table:flights}.
+
+\begin{table}
+\centering
+\renewcommand{\arraystretch}{1.4}% Spread rows out...
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+Flight No & \textbf{Departs} & \textbf{Arrives} & \textbf{Date} & \textbf{Price ($\pounds$)} \\
+\hline
+GA1 & G & A & \date{1 August} & 74 \\
+\hline
+GF1 & G & F & \date{1 August} & 86 \\
+\hline
+GL3 & G & L & \date{3 August} & 25 \\
+\hline
+AP4 & A & P & \date{4 August} & 58 \\
+\hline
+LG14 & L & G & \date{14 August} & 24 \\
+\hline
+PL12 & P & L & \date{12 August} & 45 \\
+\hline
+PM6 & P & M & \date{6 August} & 71 \\
+\hline
+MF9 & M & F & \date{9 August} & 39 \\
+\hline
+FB11 & F & B & \date{11 August} & 122 \\
+\hline
+FM8 & F & M & \date{8 August} & 234 \\
+\hline
+BG13 & B & G & \date{13 August} & 335 \\
+\hline
+BL13 & B & L & \date{13 August} & 102 \\
+\hline
+\end{tabular}
+\caption{List of flights with departure and arrival airports, flight date and price}
+\label{table:flights}
+\end{table}
+\end{example}
+
+\begin{solution}
+A valid solution of the TP instance in the example above is the sequence of flights $s$, where the each flight is represented by its flight number, specified in the first column of Table \ref{table:flights}:
+
+$$ s = \{GA1, AP4, PM6, MF9, FB11, BG13\} $$
+
+The total sum of the prices of the flights in $s$ is $\pounds$699.
+
+\end{solution}
+
+\begin{osolution}
+The optimal solution of the example TP instance is the sequence of flightd $s^{\prime}$, where the each flight is represented by its flight number, specified in the first column of Table \ref{table:flights}:
+
+$$ s^{\prime} = \{GA1, AP4, PM6, MF9, FB11, BL13, LG14\} $$
+
+The total sum of the prices of the flights in $s^{\prime}$ is $\pounds$483.
+
+$s^{\prime}$ is the optimal solution, as the total cost of the flights is minimized. In both $s$ and $s^{\prime}$, airport F is connection. $s^{\prime}$ used a second connection, that is L.
+\end{osolution}
+
+\section{Requirements}
+
+In this work, we present the traveler's problem (TP). An instance of the problem serves as a worked example, for which two possible solutions are given, one of which is optimal. We have not found any extensive study on TP and its variations in the existing literature. An investigation of this problem could be of both theoretical and practical interest.
+
+\end{document}
+
+
+
+
+
+
+
