@@ -1,79 +1,106 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{amsthm}
-\usepackage[yyyymmdd]{datetime}
+% \usepackage[yyyymmdd]{datetime}
 \theoremstyle{definition}
+\usepackage{mathtools}
 
 \newtheorem*{example}{Example}
 \newtheorem{theorem}{Theorem}
 \newtheorem*{solution}{Solution}
 \newtheorem*{osolution}{Optimal Solution}
 
-\title{The Traveler's Problem}
+\title{The Traveller's Problem}
 \author{Iva Babukova}
-\date{September 2016}
 
 \begin{document}
 \maketitle
 
-In this work we present the Traveler's Problem (TP), a computational task whose extensions and variations are often encountered by travelers around the world. The task is concerned with creating a valid travel schedule, using airplanes as a means of transportation and in accordance with certain constraints specified by the traveler.
+In this work we present the Traveller's Problem (TP), a computational task whose extensions and variations are often encountered by travellers around the world. The task is concerned with creating a valid travel schedule, using airplanes as a means of transportation and in accordance with certain constraints specified by the traveller.
 
 \section{Problem Formulation}
 Each instance of TP consists of:
 
 \begin{enumerate}
-\item A set of airports $A$. Each airport $a_{i}$ in $A$ represents a location the traveler can begin their commute in, visit as a desired destination, or connect in on the way to their destination.
-\item The total travel time $T$, within which the traveler must have visited all destinations and returned to the home point.
-\item A set of flights $F$. Each flight has arrival and departure airport, price, date and duration. A flight from airport $a_{i}$ to airport $a_{j}$ is denoted as $f_{ij}$. The cost and the duration of $f_{ij}$ at date $d$ are $c_{ijd}$ and $t_{ijd}$ respectively. $d$ is a non-negative integer less than or equal to $T$. The duration and the price are positive numbers.
-\item The trip starts and ends at the same airport $a_{0}$, which is referred to as the \textit{home point}.
-\item A set of \textit{destinations} $D$, $D \subseteq A$. The traveler must visit every airport in $D$.
+\item A set of airports $A = \{ A_{0},...,A_{n} \}$. Each airport $A_{i}$ $\in$ $A$ represents a location the traveller can begin their commute in, visit as a desired destination, or connect in on the way to their destination.
+
+\item The trip starts and ends at the same airport $A_{0}$, which is referred to as the \textit{home point}.
+
+\item The total travel time $T$, within which the traveller must have visited all destinations and returned to the home point.
+ 
+\item A set of flights $F = \{ f_{0},...,f_{m} \}$. Each flight $f_{j}$ has:
+\begin{itemize}
+\item departure airport $A^{d}_{j}$,
+\item arrival airport $A^{a}_{j}$,
+\item date $t_{j}$,
+\item duration $\Delta{j}$,
+\item cost $c_{j}$,
+\end{itemize} 
+for some non-negative integer $j$ less than or equal to $n$.
+The date $t_{j}$ is a positive integer less than or equal to $T$ that shows at which day $f_{j}$ leaves its departure airport. The duration $\Delta{j}$ is a positive fraction that shows the amount of time that takes for flight $f_{j}$ to go to $A^{a}_{j}$ from $A^{d}_{j}$. The cost $c_{j}$ is a positive number that denotes the number of units of some currency $\epsilon$ that the traveller pays in order to be able to board flight $f_{j}$.
+
+\item A set of \textit{destinations} $D = \{ D_{0},...,D_{l} \}$, $D \subseteq A$. The traveller must visit every airport in $D$.
 \end{enumerate}
 
-A solution to any instance of TP is a sequence $s$ of valid flights, ${f_{1}, f_{2}, ..., f_{n}}$, where $n$ is equal to the cardinality of $s$. We say that $s$ contains valid flights if the flights in $s$ have the following properties:
+A solution to any instance of TP is a sequence $s$ of $k$ valid flights, ${f_{1}, f_{2},...,f_{k}}$. We say that $s$ is valid if the flights in $s$ have the following properties:
 
 \begin{enumerate}
 %The departure airport of the first flight in $s$, $f_{1}$, is equal to the arrival airport of the last flight in $s$, $f_{k}$ is equal to the starting point.
-\item The departure airport of $f_{1}$ and the arrival airport of $f_{n}$ must be both equal to $a_{0}$, that is:
+\item %The departure airport of $f_{1}$ and the arrival airport of $f_{k}$ must be both equal to $A_{0}$, that is:
+$A^{d}_{1} = A^{d}_{k} = A_{0}$
 
-$$f_{1}=f_{0j}$$
-$$f_{n}=f_{i0}$$
-for some $i,j \leq |A|$ 
-\item \label{conseq} For any two consecutive flights in $s$: $f_{k}$, $f_{k+1}$, the arrival airport of $f_{k}$ is equal to the departure airport of $f_{k+1}$. 
-\item The flights in $s$ have dates which occur in increasing, temporal order (flights earlier in the list happen earlier in time).
-\item For any two consecutive flights $f_{k}$ and $f_{k+1}$ in $s$, the date of $f_{k+1}$ must be bigger than or equal to the sum of date and the duration of $f_{k}$.
-\item The sum of the date and the duration of the last flight in $s$ must be less than or equal to $T$.
-\item The date of the first flight in $s$ must be bigger than or equal to 0, assuming that the traveler starts their trip at day 0.
-\item Every airport in $D$ is included in at least two flights in $s$, which must be consecutive (follows from condition \ref{conseq}).
-\item A valid sequence of flights may contain 0, 1 or more flights to and from airports that are not destinations. Such airports are called \textit{connections}.
+\item For any two consecutive flights $f_{i}$ and $f_{i+1}$, $A^{a}_{i} = A^{d}_{i+1}$.
+
+\item For any two flights in $s$ $f_{i}$ and $f_{i+\delta}$, $t_{i} < t_{i+\delta}$ for some integers $i,\delta > 0$.
+
+\item For any two consecutive flights $f_{i}$ and $f_{i+1}$ in $s$, $t_{i+1} \geq t_{i} + \Delta_{i+1} $.
+
+\item $t_{k} + \Delta_{k} \leq T$
+
 \end{enumerate}
 
-The \textit{optimization} version of TP (TPO) asks for an \textit{optimal} solution, which is a solution that minimizes the total sum of the prices of the flights in $s$.
+Note that a valid sequence of flights may contain 0, 1 or more flights to and from airports that are not destinations. Such airports are called \textit{connections}.
+
+The \textit{optimization} version of TP (TPO) asks for an \textit{optimal} solution, which is a solution that minimizes the total sum of the prices of the flights in $s$, denoted as $c(s)$.
 
 The \textit{decision} version of TP (TPD) asks whether there exists a valid sequence of flights $s$, such that the sum of the costs of all flights in $s$ is less than or equal to some integer $B$. The solution of this problem is a `yes' or `no' answer.
 
-There exists a variety of additional constraints and extensions that can be added to TP. Our problem formulation has only presented the hard constraints so far. Every valid solution to a TP instance must satisfy these constraints. In real-world problems, travelers may have additional preferences (soft constraints) with regards to their travel. These are discussed in the next section.
+There exist a variety of additional constraints and extensions that can be added to TP. Our problem formulation has only presented the hard constraints so far. Every valid solution to a TP instance must satisfy these constraints. In real-world problems, travellers may have additional preferences (soft constraints) and requirements (hard constraints) with regards to their travel. These are discussed in the next two sections.
+
+\subsection{Hard Constraints}
+
+\begin{itemize}
+
+\item Travellers may require to spend a given date at a given destination, for example due to an event occurring on that date in this destination.
+
+\item Travellers may have a certain price threshold (budget) $B$, such that if the total travel cost exceeds that threshold the traveller will discard a solution as invalid.
+
+\end{itemize}
 
 \subsection{Soft Constraints}
 It may be desirable to search for a solution that satisfies some of the following requirements:
+
 \begin{itemize}
-\item Travelers may wish to spend a certain amount of $t_{i}$ days in each destination $d_{i}$. $t_{i}$ may be specified as a lower or a higher bound.
-\item Travelers may wish to take only direct flights. In such requirement, a valid solution must contain flights only to and from airports in the set of destinations $D$.
-\item Some travelers may want to spend as little time on flying as possible. In such case, we wish to find a solution with minimal total flight duration time (that is the sum of the duration of each flight in a solution of TP).
-\item Travelers may require to spend a given date at a given destination, for example due to an event occurring on that date in this destination.
-\item Travelers may have a certain price threshold (budget) $B$, such that if the total travel cost exceeds that threshold the traveler will discard a solution as invalid. In such case, an algorithm for TPD is required.
+
+\item Travellers may wish to spend a certain amount $\delta_{i}$ of days in each destination $D_{i}$, where $\delta_{i}$ may be specified as a lower or an upper bound.
+
+\item Travellers may wish to avoid taking connection flights. In such requirement, we wish to maximise the number of flights to and from destinations.
+
+\item Travellers may want to spend as little time on flying as possible. In such case, we wish to find a solution that minimises the sum of the durations of all flights. This can be viewed as a multi-objective or lexicographic optimisation. In the former case, we need to find a solution that satisfies more than one hard constraint simultaneously. The latter assumes that the constraints can be ranked in an order of importance. To what extend a given constraint is satisfied depends on its ranking.
+
 \end{itemize}
 
-It is therefore suggested that any attempt at an investigation of TP assumes as an additional non-functional requirement that any proposed model to solve TP is flexible and can be easily extended by adding, removing and modifying the aforementioned soft constraints.
+It is therefore suggested that any attempt at an investigation of TP assumes as an additional non-functional requirement that any proposed model to solve TP is flexible and can be easily extended by adding, removing and modifying the aforementioned constraints.
 
 \section{Worked Example}
 We present an example instance of TP and its most optimal solution. Note that in this example we do not wish to satisfy any of the previously listed soft constraints.
 
 \begin{example}
-A traveler wishes to visit 4 airports from a set of 7 airports available to travel to and from: 
+A traveller wishes to visit 4 airports from a set of 7 airports available to travel to and from: 
 
 Glasgow (G), Berlin (B), Milan (M), Amsterdam (A), Paris (P), Frankfurt (F), London (L).
 
-Airport G is the home point, F and L are connections, and B, M, A and P are the destinations. The travel time of the traveler is 15 days. All available flights are listed on Table\ref{table:flights}. For simplicity, the duration of each flight is assumed to be 1 day.
+Airport G is the home point, F and L are connections, and B, M, A and P are the destinations. The travel time of the traveller is 15 days. All available flights are listed on Table \ref{table:flights}. For simplicity, the duration of each flight is assumed to be 1 day.
 
 \begin{table}
 \centering
@@ -88,6 +115,8 @@ GF1 & G & F & \date{1} & 86 \\
 \hline
 GL3 & G & L & \date{3} & 25 \\
 \hline
+MF3 & M & F & \date{3} & 120 \\
+\hline
 AP4 & A & P & \date{4} & 58 \\
 \hline
 LG14 & L & G & \date{14} & 24 \\
@@ -101,6 +130,8 @@ MF9 & M & F & \date{9} & 39 \\
 FB11 & F & B & \date{11} & 122 \\
 \hline
 FM8 & F & M & \date{8} & 234 \\
+\hline
+FM12 & F & M & \date{12} & 250 \\
 \hline
 BG13 & B & G & \date{13} & 335 \\
 \hline
@@ -117,21 +148,18 @@ A valid solution of the TP instance in the example above is the sequence of flig
 
 $$ s = \{GA1, AP4, PM6, MF9, FB11, BG13\} $$
 
-The total cost of the flights in $s$ is 699.
+The total flights cost $c(s)$ is 699.
 
 \end{solution}
 
-\begin{osolution}
-The optimal solution of the example TP instance is the sequence of flights $s^{\prime}$, where the each flight is represented by its flight number, specified in the first column of Table \ref{table:flights}:
+A more optimal solution is the following sequence:
 
 $$ s^{\prime} = \{GA1, AP4, PM6, MF9, FB11, BL13, LG14\} $$
 
-The total cost of the flights in $s^{\prime}$ is 483.
+Here $c(s^{\prime})$ is 483. $s^{\prime}$ is considered as more optimal, because $c(s^{\prime})$ is less than $c(s)$. This shows that $s$ can not be the optimal solution and potentially $s^{\prime}$ is the one.
 
-$s^{\prime}$ is the optimal solution, as the total cost of the flights is minimized.
-\end{osolution}
-
-In this work, we present the traveler's problem (TP). An instance of the problem serves as a worked example, for which two possible solutions are given, one of which is optimal. We have not found any extensive study on TP and its variations in the existing literature. An investigation of this problem could be of both theoretical and practical interest.
+% TODO revise this paragraph
+%In this work, we present the traveller's problem (TP). An instance of the problem serves as a worked example, for which two possible solutions are given, one of which is optimal. We have not found any extensive study on TP and its variations in the existing literature. An investigation of this problem could be of both theoretical and practical interest.
 
 \section{Complexity of TP}
 
@@ -142,34 +170,52 @@ The decision version of TP is NP-complete.
 \end{theorem}
 
 \begin{proof}
-This proof first shows that TP is in NP. To prove NP-completeness, we construct a polynomial-time reduction from a known NP-complete problem $\Pi$ to TP. We choose $\Pi$ to be the traveling salesman problem (TSP). Its NP-completeness follows by a reduction from the Hamiltonian Cycle problem. The proof is presented in \cite{thebible}.
+This proof first shows the membership of TP in the NP class of problems. Second, we prove the NP-hardness of TP by constructing a polynomial-time reduction from a known NP-complete problem $\Pi$ to TP, where $\Pi$ is chosen to be the traveling salesman problem (TSP). Its NP-hardness follows by a reduction from the Hamiltonian Cycle problem. The proof is presented in \cite{thebible}.
 
-TP is in NP since a non-deterministic algorithm can guess a sequence of flights $s$ and check in polynomial time whether $s$ is a valid solution.
+Given an instance of TP and $s$, which is a sequence of flights from $F$, we can write an algorithm $V$ that checks in polynomial time whether $s$ is a valid solution. To accept or reject validity, $V$ only needs to traverse $s$ and check that each of the properties of a valid solution are satisfied. Therefore, TP is in NP.
 
-Let $\pi$ be an instance of TSP that has a set $C$ of $n$ cities, distance d($c_{i}$, $c_{j}$) between each pair of cities $c_{i}$, $c_{j}$ $\in$ $C$, positive integer $B$. The question we ask is whether there exists a tour that starts and ends at the same city $c_{1}$ and visits all cities in $C$, having length $B$ or less.
+Let $\pi$ be an instance of TSP that has:
+\begin{itemize}
+\item a set $A$ of $n$ cities,
+\item a distance d($A_{i}$, $A_{j}$) between each pair of cities $A_{i}$, $A_{j}$ $\in$ $A$, and
+\item a positive integer $B$.
+\end{itemize}
+TSP asks whether there exists a sequence of cities $\gamma$ = $A_{1}, A_{2},...,A_{n}$, that starts and ends at the same city $A_{1}$ and visits all cities in $A$, having \textit{length} $B$ or less. The sequence $\gamma$ is called a \textit{tour} and the \textit{length} of $\gamma$ $L_{\gamma}$ is equal to the sum of the distances from each city to its successor in $\gamma$, that is:
 
-Let $\pi^{\prime}$ be an instance of TPD. Let the set of airports in $\pi^{\prime}$ $C^{\prime}$ be identical to the set of cities $C$ in $\pi$ (a city in $\pi$ is an airport in $\pi^{\prime}$). Let each airport in $C^{\prime}$ also be a destination. Let $T$ be sufficiently large number that allows for all airports to be visited. Let the cost of flight from a given airport $a_{i}$ to an airport $a_{j}$ be an integer that is equal to the distance between $a_{i}$ and $a_{j}$. Let $B$ be the upper bound on the allowed total flights cost.
+$$L_{\gamma} = \sum_{i=1}^{i=n-1} d(A_{i}, A_{i+1}); A_{i}, A_{i+1} \in \gamma$$
 
-Suppose that the sequence $\gamma$ = $<c_{1}, c_{2},...,c_{n}>$ is solution of $\pi$. Let $s$ be the sequence of flights that solves $\pi^{\prime}$. From the construction of the $\pi^{\prime}$ instance it follows that the flights in $s$ visit airports in $C^{\prime}$ that are identical to the cities in $C$ in the same order $\gamma$. Therefore, a solution of $\pi$ is also a solution of $\pi^{\prime}$. 
+Let $\pi^{\prime}$ be an instance of TPD with the following properties:
+\begin{itemize}
+\item The set of airports is identical to the set of cities in $\pi$ and it is similarly denoted as $A$ (a city in $\pi$ is called an airport in $\pi^{\prime}$).
+\item Each airport in $A$ is also a destination.
+\item $T$ is equal to $n+1$. 
+\item For every $f_{k}$ $\in$ $F$ with $A^{d}_{k}$ and $A^{d}_{k}$ its departure and arrival airports respectively, $c_{k}$ is equal to d($A^{d}_{k}$, $A^{a}_{k}$) in $\pi$. 
+\item For every $f_{k}$ $\in$ $F$, $\Delta_{k}$ = 1.
+\item $B$ is the upper bound on the allowed total flights cost.
+\item Let $C$ be the Cartesian product of the airports in $A$ with itself, that is $A \times A$ = \{($A_{i}, A_{j}$) : $A_{i}$ $\in$ $A$, $A_{j}$ $\in$ $A$, i $\neq$ j\}. Then $F$ be a set of flights, such that for every ($A_{i}, A_{j}$) $\in$ $C$, there exists a flight $f_{k}$ in $F$, where $A^{d}_{k} = A_{i}$ and $A^{d}_{k} = A{j}$ for every date $t \leq T$.
+\end{itemize}
 
-If $s$ is a solution of $\pi^{\prime}$, where the airports in $C^{\prime}$ are visited in the sequence $\gamma^{\prime}$ = $<a_{1}, a_{2},...,a_{n}>$, then $\gamma^{\prime}$ is a valid solution of $\pi$.
+%% TSP solution => also TP solution
+Suppose that $\gamma$ = $A_{1}, A_{2},...,A_{n}$ is solution of $\pi$ with $L_{\gamma} \leq B$. In $\pi^{\prime}$, $\gamma$ is equivalent to the order of visited airports by some sequence of flights $s$ = $f_{1}, f_{2},...f_{n}$, such that for every $f_{k} \in s, 1 \leq k \leq n$: 
 
-We showed that $\pi$ has a solution if and only if there exits a solution to $\pi^{\prime}$.
+\begin{itemize}
+\item $ A^{d}_{k} = A_{k}, A_{k} \in \gamma $, and
+\item $ A^{a}_{k} =
+    \begin{cases*}
+      A_{k+1} & if $k < n$, \\
+      A_{1}   & if $k = n$  \\
+    \end{cases*}$, 
+\end{itemize}
+From the two conditions above it follows that $s$ satisfies property 1 and 2 of a valid solution. To satisfy property 3, 4 and 5 it is sufficient to choose flights from $F$ such that for every $f_{k}$ $\in$ $s$, $\Delta_{k}$ = $k$. We know that such flights exist in $F$ by the construction of $F$. Therefore, $s$ is a solution of $\pi^{\prime}$, from which it follows that a solution of $\pi$ is also a solution of $\pi^{\prime}$.
 
-The transformation from a TSP instance to an instance of TP can be done in polynomial time. For each of the $n$($n$-1)/2 distances d($c_{i}$, $c_{j}$) that must be specified in $\pi$, it is sufficient to check that the same cost is assigned to the flights from $a_{i}$ to $a_{j}$ for all dates.
+%% TP solution => also TSP solution
+Let $s$ be a solution of $\pi^{\prime}$, where flights in $s$ visit destinations in the sequence $\gamma^{\prime}$ = $A_{1}, A_{2},...,A_{n}$. By construction of $\pi^{\prime}$, $\gamma^{\prime}$ contains all airports in A and $L_{\gamma^{\prime}} \leq B$. Clearly, $\gamma^{\prime}$ is a valid solution of $\pi$. Therefore, a solution of $\pi^{\prime}$ is also a solution of $\pi$.
+
+The transformation from a TSP instance to an instance of TP can be done in polynomial time. For each of the $n$($n$-1)/2 distances d($A_{i}$, $A_{j}$) that must be specified in $\pi$, it is sufficient to check that the same cost is assigned to the flights from $A_{i}$ to $A_{j}$ for all dates.
 
 Therefore, TP is in NP and TSP can be reduced to TPD in polynomial time, from which it follows that TP is NP-complete.
 
 \end{proof}
-
-%% TODO
-% \begin{theorem}
-% TP is at least as hard as its decision version.
-% \end{theorem}
-
-% \begin{proof}
-%  There is a general proof in alg lecture notes that every optimization problem is harder than its decision version.
-% \end{proof}
 
 \section{Existing work}
 No existing work on this problem has been found so far in the literature. However, a similar problem, namely TSP has been a subject to extensive research in the recent years.
