@@ -388,8 +388,9 @@ Constraint (\ref{eq:one}) ensures that each city in $A$ is picked exactly once a
 \sum_{S\bar{S}} x(i,j) \geq 2, \qquad \textrm{for all } S \subset A, \bar{S} = A \setminus S, \quad \bar{S},S \neq \emptyset
 \end{equation}
 
-Constraint 
+Here, $S$ is a set of cities, subset of A and $\bar{S}$ is the set of all cities that are in $A$ and not in $S$. Constraint (\ref{eq:subtourElimination}) enforces that at least two cities in $S$ are connected with cities from $\bar{S}$. We give Figure \ref{fig:tour} and Figure \ref{fig:subtours} as an example. Let $S = \{A_{1},A_{2},A_{3}\}$, then $\bar{S} = \{A_{4},A_{5},A_{6}\}$. Constraint (\ref{eq:subtourElimination}), would detect the tour on Figure \ref{fig:subtours} as invalid, as there is no city in $S$ that is connected to a city in $\bar{S}$. Figure \ref{fig:tour} will be accepted, since $A_{1}$ and $A_{3}$ are connected with $A_{6}$ and $A_{4}$ respectively. 
 
+The objective function is:
 \begin{equation}
 \label{eq:two}
 \sum_{i\in V}\sum_{j\in V} c(i,j)x(i,j)
