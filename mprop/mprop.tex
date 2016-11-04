@@ -11,6 +11,7 @@
 \usepackage{hyperref}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{amsfonts}
 
 \newtheorem{example}{Example}
 \newtheorem{theorem}{Theorem}
@@ -20,6 +21,9 @@
 \declaretheorem[style=normalhead, numbered=no]{question}
 \declaretheorem[style=normalhead, numbered=no]{instance}
 \declaretheorem[style=solution, numbered=no]{solution}
+
+\def\Item$#1${\item[] $\displaystyle#1$
+   \hfill\refstepcounter{equation}(\theequation)}
 
 % alternative font if you prefer
 \usepackage{times}
@@ -83,15 +87,15 @@ The date $t_{j}$ is a positive rational number less than or equal to $T$ that sh
 \item A set of \textit{destinations} $D = \{ D_{1},...,D_{l} \}$, $D \subseteq A$, $l \leq n$.
 \end{enumerate}
 
-A solution to any instance of TP is a sequence $s$ of $k$ valid flights, $ \langle f_{i_{1}}, f_{i_{2}},...,f_{i_{k}} \rangle \\ \subseteq F$. We say that $s$ is valid if the flights in $s$ have the following properties:
+A solution to any instance of TP is a sequence $s$ of $k$ valid flights, $ \langle f_{i_{1}}, f_{i_{2}},...,f_{i_{k}} \rangle \, \subseteq F$, \textcolor{red}{also called a \textit{tour}}. We say that $s$ is valid if the flights in $s$ have the following properties:
 
 \begin{enumerate}
-\item $A^{d}_{i_{1}} = A^{a}_{i_{k}} = A_{0}$
-\item $ A^{a}_{i_{j}} = A^{d}_{i_{j+1}},  \quad 0 < j < k  \quad j$
-\item $ t_{i_{j}} + \Delta_{i_{j}} + C_{r} \leq t_{i_{j+1}}, \quad 0 < j \leq k, \quad \textrm{where } r = A^{d}_{i_{j+1}}$
+\Item $A^{d}_{i_{1}} = A^{a}_{i_{k}} = A_{0}$
+\Item $ A^{a}_{i_{j}} = A^{d}_{i_{j+1}},  \quad 0 < j < k  \quad j$
+\Item $ t_{i_{j}} + \Delta_{i_{j}} + C_{r} \leq t_{i_{j+1}}, \quad 0 < j \leq k, \quad \textrm{where } r = A^{d}_{i_{j+1}}$
 % david mentioned about possibly adding this as a hard constraint?
-\item $t_{i_{k}} + \Delta_{i_{k}} \leq T$
-\item $ \forall D_{p} \in D, \textrm{ } \exists \textrm{ } f_{i_{j}} \in s \textrm{, such that } A^{a}_{i_{j}} = D_{p} $
+\Item $t_{i_{k}} + \Delta_{i_{k}} \leq T$
+\Item $ \forall D_{p} \in D, \textrm{ } \exists \textrm{ } f_{i_{j}} \in s \textrm{, such that } A^{a}_{i_{j}} = D_{p} $
 \end{enumerate}
 
 Note that a valid sequence of flights may contain one or more flights to and from airports that are not destinations. Such airports are called \textit{connections}.
@@ -551,24 +555,63 @@ what is the difference between cp and ip?
 We use some of the concepts of the existing work to construct a CP and IP models for TP.
 
 \subsection{CP Model}
-We have the following variables:
+
+Let $m$ be equal to $|F|$. We introduce the following variables:
 
 \begin{itemize}
-
-\item An array $f$ of $m$, where $m = |F|$. For each $0 < i < m$, $f[i]$ is 1 if flight $F[i]$ is taken in a TP tour, or 0 otherwise.
-%variables that represents whether a flight is taken in a solution to TP or not. For each $0 \leq i < k$, $f[i]$ = 1 if i-th flight in $F$ is in the solution sequence, or 0 otherwise.
-
-\item an array $s$ of size $k$, which is the sequence of flights taken during the trip. Each variable in $s$ has domain ${0, k}$. If $s[i]$ is 0, then the trip is finished. Therefore, the value of every subsequent variable in $s$ will also be 0. If no variables in $s$ are equal to 0, then the solution is a trip consisting of all flights.
-
-\item an array $c$ of size $n$ which represents the number of times each city is visited during the trip. The value of each variable must be even.
+\item An array $\mathcal{F}$ of size $m$, where each variable has domain $\{0,1\}$. For every $j$ ($0 < j < m$), if $f_{j}$ is in the tour, then $\mathcal{F}[j]$ = 1, otherwise $\mathcal{F}[j]$ = 0.
+\item An array $\mathcal{S}$ of size $m$ that represents the sequence of flights. The domain of each variable is $\{0,...,m\}$. If $\mathcal{S}[i] = j$, then flight $f_{j} \in F$ is the i$^{th}$ flight in the tour. Then, $\mathcal{F}[j] = 1$. To denote the end of the tour at some position $k < m$, we set $\mathcal{S}[k] = 0$. All subsequent variables in $\mathcal{S}$ will then have to be 0 and the tour is of size $k-1$.
+\item An array $\mathcal{A}$ of $n$ variables that represents the number of times each airport is visited in the tour. The domain of each variable is $\{0,2k\}$ for some integer $k$, because the number of times a tour departs in each airport must be equal to the number of times the tour arrives at that airport. $\mathcal{A}$ is used for enforcing property (5) of a valid tour and for adding additional constraints on visiting cities, as we discuss later.
 \end{itemize}
 
-We have the following constraints:
-\begin{enumerate}
-\item for every $i > 0$
-\end{enumerate}
+Similarly to the TSP, TP can be formulated as the problem of minimising the objective function:
+
+\begin{equation}
+\label{eq:TPwithCPobj}
+%\color{red}
+\sum^{j = m}_{j = 1} c_{j} \mathcal{F}[j]
+\end{equation}
+
+subject to the following constraints:
+
+\begin{itemize}
+\Item
+$(\mathcal{S}[j] = 0) \, \Rightarrow \, (\mathcal{S}[j+1] = 0), \quad \forall \, j, \,  0 \leq j < m$
+\Item
+$(\mathcal{F}[j] = 1) \, \Rightarrow \, (f_{j} \in \mathcal{S}) , \quad \forall \, j, \, 0 \leq j < m$
+\Item
+$(\mathcal{F}[j] = 1), \, \Rightarrow \, (\mathcal{A}[i] = \mathcal{A}[i] + 1), \, i = A^{d}_{j} \vee i = A^{a}_{j}, \quad \forall \, j, \,  0 \leq j < m$
+\Item
+$\mathcal{A}[i] = 2k, \quad \forall \, i, \,  0 \leq i < n \textrm{ and } k \in \mathbb{Z}$
+\Item
+$|H| = \mathcal{A}[i], \, H = \{f_{j} \in \mathcal{S} | \, A^{d}_{j} = A_{i} \vee A^{a}_{j} = A_{i}\},\quad \forall \,i,j, \, 0 \leq j < m, \, 0 \leq i < n$
+\Item
+$\textrm{allDiff}(\mathcal{S}[0],...,\mathcal{S}[j]), \quad \forall \, (j = m) \vee (0 \leq j < m \, \wedge \, \mathcal{S}[j] \neq 0 \wedge \mathcal{S}[j+1] = 0)$
+\end{itemize}
+
+The constraints equivalent to the five properties of a valid tour:
+
+\begin{itemize}
+\Item
+$(\mathcal{S}[0] = j) \, \Rightarrow \, (A^{d}_{j} = A_{0}) \quad \forall \, j, \,  0 \leq j < m$
+\item[]
+$(\mathcal{S}[k] = j \neq 0 \wedge \mathcal{S}[k+1] = 0) \, \Rightarrow \, (A^{a}_{j} = A_{0}) \quad \forall \, j, \,  0 < j < m$
+\Item
+$A^{a}_{p} = A^{d}_{q}, \textrm{ where } p = \mathcal{S}[j] \wedge q = \mathcal{S}[j+1], \quad \forall \, j \, 0 \leq j < m$
+\Item % todo: adjust constraint to be valid for the last flight
+$t_{p} + \Delta_{p} + C_{q} \leq t_{q}, \textrm{ where } p = \mathcal{S}[j] \wedge q = \mathcal{S}[j+1], \quad \forall \, j, \,  0 \leq j < m - 1$
+\Item
+$(\mathcal{S}[j] \neq 0 \wedge \mathcal{S}[j+1] = 0) \, \Rightarrow \, (t_{q} + \Delta_{q} \leq T, \, q = \mathcal{S}[j]), \quad \forall \, j, \,  0 \leq j < m$
+\Item
+$(\mathcal{A}[i] \in D) \, \Rightarrow \, (\mathcal{A}[i] > 0), \quad \forall \, i, \,  0 \leq i < n$
+\end{itemize}
+
+Constraints 10-15 ensure that the three introduced arrays of variables comply with their definitions. Constraint (14) is additionally added to restrict that the tour visits each airport the required number of times.
+
+Constraints 16-20 enforce any assignment of variables to $\mathcal{S, F, A}$ to make $\mathcal{S}$ a valid tour. Constraint (16) enforces property (1), constraint (17) enforces property (2), etc.
 
 \subsection{IP Model}
+
 
 \subsection{Experimental Datasets}
 \subsubsection{Skyscanner Flights API}
