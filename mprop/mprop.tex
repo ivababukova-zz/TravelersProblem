@@ -69,7 +69,7 @@ Each instance of TP consists of:
 
 \item The trip starts and ends at the same airport $A_{0}$, which is referred to as the \textit{home point}.
 
-\item The total travel time $T$, within which the traveller must have visited all destinations and returned to the home point. \textcolor{red}{The first day is day 0.}
+\item The total travel time $T$, within which the traveller must have visited all destinations and returned to the home point. The first day is day 0.
  
 \item A set of flights $F = \{ f_{0},...,f_{m} \}$. Each flight $f_{j}$ has:
 \begin{itemize}
@@ -82,12 +82,12 @@ Each instance of TP consists of:
 for some non-negative integer $j$ less than or equal to $n$.
 The date $t_{j}$ is a positive rational number less than or equal to $T$ that shows at which day $f_{j}$ leaves its departure airport. The duration $\Delta{j}$ is a positive fraction that shows the amount of time that takes for flight $f_{j}$ to go from $A^{d}_{j}$ to $A^{a}_{j}$. The cost $c_{j}$ is a positive number that denotes the number of units of some currency $\epsilon$ that the traveller pays in order to be able to board flight $f_{j}$.
 
-\item Each airport $A_{i}$ has a \textit{connection time} $C_{A_{i}}$, that is the time that takes to switch from any selected flight $f_{p}$ with $A^{a}_{p} = A_{i}$ to any selected flight $f_{q}$ with $A^{d}_{q} = A_{i}$, \textcolor{red}{where $f_{q}$ is immediately after $f_{p}$ in a solution.}
+\item Each airport $A_{i}$ has a \textit{connection time} $C_{A_{i}}$, that is the time that takes to switch from any selected flight $f_{p}$ with $A^{a}_{p} = A_{i}$ to any selected flight $f_{q}$ with $A^{d}_{q} = A_{i}$, where $f_{q}$ is immediately after $f_{p}$ in a solution.
 
 \item A set of \textit{destinations} $D = \{ D_{1},...,D_{l} \}$, $D \subseteq A$, $l \leq n$.
 \end{enumerate}
 
-A solution to any instance of TP is a sequence $s$ of $k$ valid flights, $ \langle f_{i_{1}}, f_{i_{2}},...,f_{i_{k}} \rangle \, \subseteq F$, \textcolor{red}{also called a \textit{tour}}. We say that $s$ is valid if the flights in $s$ have the following properties:
+A solution to any instance of TP is a sequence $s$ of $k$ valid flights, $ \langle f_{i_{1}}, f_{i_{2}},...,f_{i_{k}} \rangle \, \subseteq F$, \textcolor{red}{also called a \textit{trip}}. We say that $s$ is valid if the flights in $s$ have the following properties:
 
 \begin{enumerate}
 \Item $A^{d}_{i_{1}} = A^{a}_{i_{k}} = A_{0}$
@@ -98,7 +98,7 @@ A solution to any instance of TP is a sequence $s$ of $k$ valid flights, $ \lang
 \Item $ \forall D_{p} \in D, \textrm{ } \exists \textrm{ } f_{i_{j}} \in s \textrm{, such that } A^{a}_{i_{j}} = D_{p} $
 \end{enumerate}
 
-Note that a valid sequence of flights may contain one or more flights to and from airports that are not destinations. Such airports are called \textit{connections}.
+\textcolor{red}{In this work, we refer to these properties as \textit{trip properties}}. Note that a valid sequence of flights may contain one or more flights to and from airports that are not destinations. Such airports are called \textit{connections}.
 
 % these statements are only really meaningful when you relate TP to TSP and also to VRP.
 % \textcolor{red}{Also note that the current problem formulation accepts asymmetric flight costs, i.e. one might have two flights $f_{i}$ and $f_{j}$ such that $A^{d}_{i} = A^{a}_{j}$ and $A^{a}_{i} = A^{d}_{j}$. That does not imply that $c_{i} = c_{j}$. Moreover, the problem formulation does not restrict the flight cost to depend on the flight duration. Consequently, this implies that TP is \textit{asymmetric} and in general the flight cost need not satisfy the \textit{triangle inequality}.}
@@ -146,14 +146,21 @@ A traveller wishes to visit 4 airports from a set of 7 airports available to tra
 
 Glasgow (G), Berlin (B), Milan (M), Amsterdam (A), Paris (P), Frankfurt (F), London (L).
 
-Airport G is the home point, F and L are connections, and B, M, A and P are the destinations. The travel time of the traveller is 15 days. All available flights are listed on Table \ref{table:flights}. For simplicity, the duration of each flight is assumed to be 1 day. This means that if the traveller gets a flight at date $x$, they will reach the arrival airport at day $x+1$.
+Airport G is the home point, F and L are connections, and B, M, A and P are the destinations. The travel time of the traveller is 15 days. All available flights are listed on Table \ref{table:flights} \textcolor{red}{ and the example is shown pictorially on Figure \ref{fig:map}}. For simplicity, the duration of each flight is assumed to be 1 day. This means that if the traveller gets a flight at date $x$, they will reach the arrival airport at day $x+1$.
+
+\begin{figure}
+\centering
+\includegraphics[height=6cm, width=7.5cm]{images/map.png}
+\caption{\textcolor{red}{ All airports in Example 1. The links between each two airports are available at certain dates and vary in price, as indicated in Table \ref{table:flights}.}}
+\label{fig:map}
+\end{figure}
 
 \begin{table}
 \centering
 \renewcommand{\arraystretch}{1.4}% Spread rows out...
 \begin{tabular}{|l|l|c|c|c|c|c|}
 \hline
-\textbf{Flight No} & \textbf{Departs} & \textbf{Arrives} & \textbf{Date} & \textbf{Price} \\
+& \textbf{Flight No} & \textbf{Departs} & \textbf{Arrives} & \textbf{Date} & \textbf{Price} \\
 \hline
 1 & GA1 & G & A & \date{1} & 74 \\
 \hline
@@ -198,13 +205,13 @@ Airport G is the home point, F and L are connections, and B, M, A and P are the 
 \end{example}
 
 \begin{solution}
-A valid solution of the TP instance in the example above is the sequence of flights $s$, where the each flight is represented by its flight number, specified in the first column of Table \ref{table:flights}:
+A valid solution of the TP instance in the example above is the trip $s$, where the each flight is represented by its flight number, specified in the first column of Table \ref{table:flights}:
 
 $$ s = \langle GA1, AP4, PM6, MF9, FB11, BG13\rangle $$
 
 The total flights cost $c(s)$ is 699.
 
-A valid solution with lower cost is the following sequence:
+A valid solution with lower cost is the following trip:
 
 $$ s^{\prime} = \langle GA1, AP4, PM6, MF9, FB11, BL13, LG14\rangle $$
 
@@ -271,6 +278,15 @@ $$L_{\gamma} = \bigg( \sum_{i=1}^{n-1} d(A_{\pi(i)}, A_{\pi(i+1)}) \bigg) + d(A_
 
 \end{question}
 
+\item \textbf{Job-Shop Scheduling Problem\textsuperscript{*} (JSSP)}
+\begin{instance}
+A set $R$ of resources and a set $N$ of jobs. Each job $J \in N$ consists of a sequence of operations $O_{J}$, a ready time $rt_{J}$ and a deadline $dt_{J}$. Each operation $i$ has processing time $p_{i}$ and required resource $r_{i}$.
+\end{instance}
+
+\begin{question}
+Is there a sequence $S = \{st_{i} : i \in J, \forall J \in N\}$ of starting times for every operation, such that every job meets its deadline and each resource is used by no more than one job at the same time?
+\end{question}
+
 \item \textbf{The Assignment Problem (AP)}
 
 \begin{instance}
@@ -311,7 +327,7 @@ Let $\pi$ be an instance of TSP. Let $\pi^{\prime}$ be an instance of TPD with t
 
 %% TSP solution => also TP solution
 
-Suppose that $\gamma$ = $ \langle A_{i_{1}}, A_{i_{2}},...,A_{i_{n}} \rangle $ is a solution to $\pi$, where $\langle i_{1},...,i_{n} \rangle$ is a permutation of $\langle 1,...,n \rangle $ and the total travel distance $L_{\gamma} \leq B$. \textcolor{red}{Without loss of generality, assume that $i_{1} = 1$.} In $\pi^{\prime}$, $\gamma$ is equivalent to the order of visited airports by some sequence of flights $s$ = $ \langle f_{j_{1}}, f_{j_{2}},...f_{j_{n}} \rangle $, such that for each $p$  $(1 \leq p \leq n)$ there exists $q$ $(1 \leq q \leq n)$ such that $A^{d}_{j_{q}} = A_{i_{p}}$ and $A^{a}_{j_{q}} = A_{i_{p+1}}$, where subscripts are taken modulo $n$. \textcolor{red}{Therefore, $s$ satisfies property (1) of a valid solution.} For each $q$ $(1 \leq q \leq n)$, $A^{a}_{j_{q}} = A^{d}_{j_{q+1}}$ and $t_{j_{q}} = q - 1$.  We know that such flights exist in $F$ by the construction of the set $F$.
+Suppose that $\gamma$ = $ \langle A_{i_{1}}, A_{i_{2}},...,A_{i_{n}} \rangle $ is a solution to $\pi$, where $\langle i_{1},...,i_{n} \rangle$ is a permutation of $\langle 1,...,n \rangle $ and the total travel distance $L_{\gamma} \leq B$. Without loss of generality, assume that $i_{1} = 1$. In $\pi^{\prime}$, $\gamma$ is equivalent to the order of visited airports by some sequence of flights $s$ = $ \langle f_{j_{1}}, f_{j_{2}},...f_{j_{n}} \rangle $, such that for each $p$  $(1 \leq p \leq n)$ there exists $q$ $(1 \leq q \leq n)$ such that $A^{d}_{j_{q}} = A_{i_{p}}$ and $A^{a}_{j_{q}} = A_{i_{p+1}}$, where subscripts are taken modulo $n$. Therefore, $s$ satisfies property (1) of a valid solution. For each $q$ $(1 \leq q \leq n)$, $A^{a}_{j_{q}} = A^{d}_{j_{q+1}}$ and $t_{j_{q}} = q - 1$.  We know that such flights exist in $F$ by the construction of the set $F$.
 
 From the construction of $s$, it follows that property (2) also holds. Properties (3) and (4) also hold, since we have chosen flights from $F$ such that for every $f_{j_{q}}$ $\in$ $s$, $t_{j_{q}} = q - 1$ ($(1 \leq q \leq n)$). Property (5) is satisfied, since all airports in $A$ are destinations.
 
@@ -377,8 +393,7 @@ Constraint (\ref{eq:one}) ensures that each city in $A$ is picked exactly once a
 
 \begin{equation}
 \label{eq:subtourElimination}
-\color{red}
-\sum_{S\bar{S}} x(i,j) \geq 2, \quad (i,j) \in (S \times \bar{S}) \cup (\bar{S} \times S) \textrm{ for all } S \subset A, \bar{S} = A \setminus S, \quad \bar{S},S \neq \emptyset
+\sum \{x(i,j) : (i,j) \in (S \times \bar{S}) \cup (\bar{S} \times S)\} \geq 2, \quad \forall \, \emptyset \subset S \subset A, \textrm{ where } \bar{S} = A \setminus S
 \end{equation}
 
 Here, $S$ is a subset of A and $\bar{S}$ is the set of all cities that are in $A$ and not in $S$. Constraint (\ref{eq:subtourElimination}) enforces that at least two cities in $S$ are connected with cities from $\bar{S}$. We give Figure \ref{fig:tour} and Figure \ref{fig:subtours} as an example. Let $S = \{A_{1},A_{2},A_{3}\}$, then $\bar{S} = \{A_{4},A_{5},A_{6}\}$. Constraint (\ref{eq:subtourElimination}), would detect the tour on Figure \ref{fig:subtours} as invalid, as there is no city in $S$ that is connected to a city in $\bar{S}$. Figure \ref{fig:tour} will be accepted, since $A_{1}$ and $A_{3}$ are connected with $A_{6}$ and $A_{4}$ respectively.
@@ -402,21 +417,19 @@ Here, $S$ is a subset of A and $\bar{S}$ is the set of all cities that are in $A
 The formulation of the general TSP problem is given by the objective function (\ref{eq:objfunc}), which has to be minimised, subject to constraints (\ref{eq:one}) and (\ref{eq:subtourElimination}).
 
 \subsubsection{The Assignment Problem Relaxation}
-
 %The Assignment Problem (AP), formulated in Section \ref{npcompleteproblems}, can be represented with the tools of linear programming and it can be solved in at most $\mathcal{O}(n^{3})$ steps \citep{Kuhn55}. 
 
-The assignment problem (AP) relaxation consists of removing the subtour elimination constraint from the TSP IP model and minimising the objective function (\ref{eq:objfunc}), only subject to constraint (\ref{eq:one}). It is well known and extensively used relaxation \cite{Little63,Eastman58,Bellmore71,Baker83,Laporte86}. In this section we explain how this method is used for solving NP-hard problems, using TSP as an example.
+The assignment problem (AP) relaxation consists of removing the subtour elimination constraint from the TSP IP model and minimising the objective function (\ref{eq:objfunc}) only subject to constraint (\ref{eq:one}). This is well known and extensively used relaxation \cite{Little63,Eastman58,Bellmore71,Baker83,Laporte86}. In this section we explain how this method helps in solving NP-hard problems, using TSP as an example.
 
 \textcolor{red}{
-Let $\pi^{\prime}$ be the problem that results after performing AP relaxation on some instance $\pi$ of TSP. We will show that $\pi^{\prime}$ is equivalent to the Assignment Problem (AP).
+Let $\pi^{\star}$ be the resulting problem after performing AP relaxation on some instance $\pi$ of TSP. 
+The feasible solutions in $\pi$ correspond to travelling salesman tours and we let $opt(\pi)$ denote an optimal solution. The feasible solutions in $\pi^{\star}$ correspond to perfect matchings and we let $opt(\pi^{\star})$ correspond to a perfect matching of minimum weight.
 }
 
-\textcolor{red}{
-The model for $\pi^{\prime}$ can be expressed as a bipartite graph $G$ like the graphs shown on Figure \ref{fig:invalidAP} and Figure \ref{fig:validAP}. $G$ has two sets of vertices: $O = o_{1},..,o_{n}$ and $I = i_{1},...,i_{n}$ and a set of edges $E = \{(o_{p}, i_{q}) \,|\, a_{p},a_{q} \in A,\, p \neq q \}$ for $a_{p},a_{q} \in A$, where $I$ and $O$ are both identical to $A$. Each edge $e = (o_{p}, i_{q})$ in $E$ has weight $w_{e}$ equal to $d(a_{p},a_{q})$ and it represents a path from some city $o_{p} \in O$ to some city $i_{q} \in I$. Finding a solution to $\pi^{\prime}$ is equivalent to finding a perfect matching in $G$ of minimum value of the sum of weight of the edge between every two matched vertices. Each vertex in $O$ then represents an outgoing city and each vertex in $I$ represents an incoming city.
-}
+Problem $\pi^{\star}$ can be modelled as a bipartite graph $G(V,E)$, as shown on Figure \ref{fig:tspbipartite}. The vertex set of $G$ is $V=O \cup I$, where $O = o_{1},..,o_{n}$ and $I = i_{1},...,i_{n}$ \textcolor{red}{both correspond to $A$.} The set of edges is $E = \{(o_{p}, i_{q}) \,|\, a_{p},a_{q} \in A,\, p \neq q \}$. Each edge $e = (o_{p}, i_{q}) \in E$ has weight $w_{e}$ equal to $d(a_{p},a_{q})$ and it represents a link from $a_{p}$ to $a_{q}$.
 
-\textcolor{red}{
-Problem $\pi^{\prime}$ asks for assigning each vertex in $O$ to a vertex in $I$, which is equivalent to an instance of AP with $A$ = $O$, $B$ = $I$ and $w_{e} = c(a_{p},b_{q}), \, e = (o_{p}, i_{q}), \, p \neq q$ or $w_{e} = \infty$ if $p = q$.
+Figure \ref{fig:validAP} and Figure \ref{fig:invalidAP} are both examples of a perfect matching, where Figure \ref{fig:validAP} has $(o_{1} \rightarrow i_{2})$, $(o_{2} \rightarrow i_{3})$, $(o_{3} \rightarrow i_{4})$, $(o_{4} \rightarrow i_{5})$, $(o_{5} \rightarrow i_{6})$ and $(o_{6} \rightarrow i_{1})$.
+Every $sol(\pi^{\star})$ can be translated to a path through the cities in $\pi$ as follows: for every matched pair of vertices $(o_{p} \rightarrow i_{q})$ in $sol(\pi^{\star})$, it is sufficient to choose city $a_{q}$ as the next visited city after $a_{p}$ in $\pi$. \textcolor{red}{For example, the matching in Figure \ref{fig:validAP} gives the tour shown in Figure \ref{fig:tour} and the matching in Figure \ref{fig:invalidAP} is equivalent to the subtours in Figure \ref{fig:subtours}.
 }
 
 \begin{figure}
@@ -435,11 +448,21 @@ Problem $\pi^{\prime}$ asks for assigning each vertex in $O$ to a vertex in $I$,
 \end{minipage}
 \end{figure}
 
+\begin{figure}
+\centering
+\includegraphics[width = 3cm, height = 4cm]{images/tspbipartite.png}
+\caption{Problem $\pi^{\star}$ represented as a graph $G(V,E)$}
+\label{fig:tspbipartite}
+\end{figure}
+
 \textcolor{red}{
-Note that a solution to $\pi^{\prime}$ can be either a tour or a collection of subtours (since we relaxed the subtour elimination constraint). Figure \ref{fig:invalidAP} and Figure \ref{fig:validAP} are both solutions to AP obtained after performing an AP relaxation to a TSP instance with 6 cities. They are examples of how not all solutions to $\pi^{\prime}$ are solutions to $\pi$.
-Let the optimal solution to $\pi^{\prime}$ $\pi^{\prime\star}$ have total edge weight equal to $\alpha$. Suppose that it is an invalid tour in $\pi$. Therefore, the tour in $\pi^{\star}$ is of length bigger than $\alpha$. Conversely, suppose that $\pi^{\prime\star}$ is a valid tour in $\pi$. Therefore, the length of the tour in $\pi^{\star}$ is equal to $\alpha$. Hence, the length of an optimal solution to $\pi^{\star}$ is bigger than or equal to the value of $\pi^{\prime\star}$.
-In the existing work, this feature is used to derive a lower bound on the cost of the most optimal tour \citep{Little63,Dantzig54,Baker83}. This approach is frequently combined with a branch and bound technique \citep{tspbible}. We discuss this approach more in the next section.
+Note that 
+%$sol(\pi^{\star})$ need not map to $sol(\pi)$, as suggested from the previous example. However, every $sol(\pi)$ can be translated to some $sol(\pi^{\star})$. 
+a feasible solution in $\pi$ maps to a feasible solution in $\pi^{\star}$, but the converse need not to true in general, as the example in Figure \ref{fig:invalidAP} shows.
 }
+
+Let $opt(\pi^{\star})$ have total edge weight equal to $\alpha$. Suppose that $opt(\pi^{\star})$ does not map to a tour in $\pi$. Therefore, $opt(\pi)$ must have length at least $\alpha$. Conversely, suppose that $opt(\pi^{\star})$ can be mapped to $opt(\pi)$. Therefore, the length of $opt(\pi)$ is equal to $\alpha$. Hence, the length of $opt(\pi)$ is greater than or equal to the value of $opt(\pi^{\star})$.
+In the existing work, this property is used to derive a lower bound on the cost of $opt(\pi)$ \citep{Little63,Dantzig54,Baker83}. This approach is frequently combined with a branch and bound technique \citep{tspbible}, which is discussed in Section \ref{branchandbound}.
 
 %\textcolor{blue}{The relation between TSP and AP is explained very nicely by \citet{Flood56}}
 
@@ -448,87 +471,97 @@ In the existing work, this feature is used to derive a lower bound on the cost o
 
 % By dropping constraint (\ref{eq:subtourElimination}), the solution of $P_{AP}$ can be either a tour, or a collection of subtours. Hence, every tour of $P$ is a solution to AP, but not all solutions of AP are tours \citep{Bellmore71}. This allows for using the cost of the optimal solution of AP as a lower bound for the most optimal solution of $P$. In \cite{tspbible} it is showed with an experiment that both in theory and in practice the most optimal solution to AP is very likely to be a strong bound on $P$. The AP can be solved in at most $\mathcal{O}(n^{3})$ steps \citep{Kuhn55,Christofides75}. The ``bound'' procedure, that is called for every problem $P_{ij}$ in Algorithm \ref{alg:branchandbound}, computes AP$_{ij}$. It is shown in \cite{tspbible} that computing AP$_{ij}$ for each problem $P_{ij}$ in at most $\mathcal{O}(n^{2})$ steps by the Hungarian method \citep{Kuhn55}, provided that the algorithm is started from the optimal solution of the parent problem $P_{i}$.
 
-\textcolor{red}{
-\citet{Dantzig54} solve the constructed TSP model using a novel method, which they call the ``cutting-plane method''. This work skips to present the procedure. We point the interested reader back to \citep{Dantzig54} and \citep{Dantzig59}, where in the latter the cutting-plane method is explained with more detail using a 10 city TSP instance as an example.
-}
+\citet{Dantzig54} solve the constructed TSP model using a novel method for that time, which they call the ``cutting-plane method''. We point the interested reader back to \citep{Dantzig54} and \citep{Dantzig59}, where in the latter the cutting-plane method is explained in more detail using a 10 city TSP instance as an example.
 
-% gomory's fundamental work on mixed integer linear programming
-
-% Solving integer programs is a difficult task in general. One approach that is commonly used in computational mathematics is to find a relaxation that is easier to solve numerically and gives a good approximation. In this book we focus mostly on linear programming relaxations.
+%\textcolor{blue}{What is the complexity of the AP? Why is this not the best lower bound for TSP? Write about the min-weight spanning tree bound, briefly and say that it is better than this one. Compare their complexities.}
 
 \subsection{Constraint Programming}
 \label{cp}
-Constraint Programming (CP) is a widely used method for solving optimisation problems \citep{Caseau97, Manlove07, Mcdonald02}. Given an instance $\pi$ of some optimisation problem, we first model it as a constraint programming problem $\pi_{M}$. Problem $\pi_{M}$ consists of a set of variables $V$, each with a set of possible values, called its \textit{domain}, and a set of rules, called \textit{constraints} about variables assignment. A solution to $\pi$ is an assignment of all variables in $V$, such that all constraints are satisfied. 
+\textcolor{red}{
+Constraint Programming (CP) is widely used method for solving optimisation problems \citep{Caseau97, Manlove07, Mcdonald02}. Given an instance $\pi$ of an optimisation problem, we first model it as a constraint satisfaction problem (CSP) $CSP(\pi)$. Problem $CSP(\pi)$ consists of a set of decision variables $V$, each with a set of possible values, called its \textit{domain}, and a set of rules, called \textit{constraints} concerning the assignment of values to variables. A solution to $\pi$ is an assignment of each variable in $V$ to a value in its domain, such that all constraints are satisfied. The program that searches for a solution $CSP(\pi)$ is called a \textit{solver}.}
 
-Whenever the domain $d_{v}$ of a variable $v$ is empty in some temporal assignment of variables, we say that we have a \textit{domain wipeout} and this variables assignment is regarded as invalid.
+Whenever the domain $dom_{v}$ of a variable $v$ is empty in some temporal assignment of variables, we say that we have a \textit{domain wipeout} and this variables assignment is regarded as invalid. The \textit{degree} of $v$ is the number of constraints that involve $v$ and at least one other unassigned variable.
 
-search tree?
+% todo: add citations
+\textcolor{red}{
+Finding a solution to $CSP(\pi)$ involves a search through the assignments of the variables in $CSP(\pi)$. Finding an optimal solution or proving that no solution exists requires iterating over the entire search space in the worst case. There are multiple techniques to speed up the search, such as identifying and discarding poor temporal variable assignments from further investigation, implementing intelligent search methods, or adding \textit{heuristics} for variable and value assignments. We discuss some heuristics that could be applicable to TP in the next section.}
 
-maybe explain the all-different constraint, because it is used in the CP model.
-
-\subsubsection{The Vehicle-Routing Problem with Constraint Programming}
-explain how VRP is modeled and solved with CP. Comment on the difference between CP and IP.
-
-% \subsubsection{Local Search}
 \subsubsection{Heuristics}
-common heuristics for TPS, TCTSP, VRP?
+% todo: is the thing in blue true?
+Heuristics are rules concerning the ordering of variables or assignments of values, used to ``guide'' the search that aim to limit the total explored search space. Previous work has shown that heuristics can have a significant effect on search effort \citep{Haralick80:a, Gent96}. However, they are not guaranteed to always work. Heuristics are applicable for the cases when the solution is not required to be an optimum and when the particular problem instance has no solutions. In the latter, heuristics can help to prove early in the search that a given partial solution leads to a domain wipeout. This section presents some of the most well-known heuristics and gives an example of two successful heuristics that are tailored specifically for the Job-Shop Scheduling Problem (JSSP), defined in Section \ref{npcompleteproblems}.
+
+Research effort is spent on understanding heuristics and the properties that improve their effectiveness. \citet{Christopher03} develop a framework for analysing the effectiveness of  heuristics. \citet{Hooker95} prove that heuristics that create simpler subproblems are successful in general, and heuristics that create subproblems that are more likely to be satisfiable are usually ``bad''. \citet{Haralick80} propose the intuition that ``to succeed, try first where you are most likely to fail'', known as the \textit{fail-first principle}. It suggests that the variable to be assigned next should be the one which is most-likely to lead to a domain wipeout of some variable.
+
+\textcolor{red}{
+The fail-first principle is a base for the development of various heuristics. For instance, \citet{Golomb65} propose a heuristic \texttt{dom} that chooses next assigned variable to be the one with the smallest number of values remaining in its domain. \citet{Brelaz79} introduce a new generalisation of \texttt{dom}, denoted as \texttt{dom+deg}, which chooses the variable with the smallest number of values remaining in its domain, breaking ties on highest variable degree. Another generalisation of \texttt{dom} is \texttt{dom/deg}, which divides the domain size of a variable by the degree by its degree and chooses the variable that gives minimal value \citep{Bessiere96}. All of these are \textit{variable ordering} heuristics, because they determine the next explored variable during search.}
+
+%\textcolor{blue}{few words about how good fail-first principle is}
+
+%\textcolor{blue}{Value-ordering heuristics examples}
+
+% todo: explain why TP is similar to JSSP, why TP is similar to TSP. Maybe put the explanation in the problems definition.
+\subsubsection*{The Slack-Based Heuristics}
+\textcolor{red}{
+The slack-based heuristics are introduced by \citet{Smith93} for the JSSP, defined in Section \ref{npcompleteproblems}. They help in determining how to sequence a given pair of operations in an instance of JSSP, modelled as CSP. There are various ways to model JSSP as CSP, which is a significant area of research on its own. We refer the interested reader to \citet[Chapter~22]{cpbible} for an extensive discussion.
+This section explains the main principles of the slack-based heuristics, comments on their performance and discusses our hypothesis that it could be applicable to TP (which is the main reason why they are discussed here).
+}
+
+% todo: the following paragraph does not make sense for somebody who has not read the original paper
+\textcolor{red}{
+Let $\pi_{J}$ be an instance of the JSSP and let $CSP(\pi_{J})$ be constructed using some CSP model for JSSP, which includes a variable $o(i,j)$ that determines the ordering of any pair of operations $i$ and $j$ in $\pi_{J}$. The value of $o(i,j)$ is 1 when $i$ is scheduled before $j$, or 0 otherwise. There are four possible restrictions for the values of $o(i,j)$, imposed by the constraints in $CSP(\pi_{J})$: 
+\begin{enumerate}
+\item $o(i,j)$ can only be 0, i.e. $i$ is before $j$ in the current variable assignment.
+\item $o(i,j)$ can only be 1, i.e. $j$ is before $i$ in the current variable assignment.
+\item $o(i,j)$ can be neither 0 nor 1, i.e. there is a domain wipeout.
+\item $o(i,j)$ can be either 0 or 1, i.e. there is no restriction on the ordering of $i$ and $j$.
+\end{enumerate}
+The slack-based heuristics are only applicable for case 4 and thus we skip to discuss the first three possibilities.}
+
+%The slack-based heuristics developed by Smith and Cheng (1993) choose ordering variables according to the width of task start windows and the overlap between windows.
+\textcolor{red}{
+For every $o(i,j)$ that can be either 0 or 1, \citet{Smith93} compute $slack(i, j)$, which is the temporal time remaining after ordering $i$ before $j$ and similarly $slack(j, i)$, as shown in Figure \ref{fig:slack}. If process $i$ is sequenced before process $j$, then $slack(i, j)$ indicates the time window within which $j$ has to be completed.
+Two different heuristics for the sequencing of $i$ and $j$, based on the size of the time window are introduced: \textit{min-slack} and \textit{max-slack}.}
+
+\begin{figure}
+\centering
+\includegraphics[height=7cm, width=6cm]{images/slack.png}
+\caption{The values of $slack(i, j)$ (the length of the bottom pink line) and $slack(j, i)$ (the length of the top pink line)}
+\label{fig:slack}
+\end{figure}
+
+\textcolor{red}{
+Min-slack ordering selects an ordering of $i$ and $j$ that gives minimum time flexibility for the tasks, that is $min\{slack(i, j), slack(j, i)\}$. For instance, min-slack heuristics would assign $o(i,j) = 1$ for the example in Figure \ref{fig:slack}.}
+
+\textcolor{red}{
+Max-slack heuristic orders the operations, such that there is greatest time flexibility for the tasks, that is $max\{slack(i, j), slack(j, i)\}$. In the example in Figure \ref{fig:slack}, max-slack would assign $o(i,j) = 1$.}
+
+\textcolor{red}{We relate the idea behind min-slack to the principles of the \texttt{dom} heuristic. If the starting times of $i$ and $j$ are variables, then the assignment of $o(i,j)$ based on min-slack would decrease the domain of the starting time of the second scheduled process. As opposed to min-slack, max-slack would maximize the number of possible starting times. We recognise that this idea can be traced back to the work of \citet{Geelen92} which proposes a principle that each variable should be assigned the least constraining value in its domain.}
+
+\textcolor{red}{
+\citet{Smith93} compare the slack-based heuristics with two solution procedures over the same suite of benchmark problems and report on obtaining ``comparable results at very low computational expense''. In \citet[p.~105]{cpbible}, slack-based heuristics are described as ``effective''. However, \citet{Crawford94} argue that their effectiveness is mainly due to their problem representation method.}
+
+%\textcolor{blue}{Why do we think that these heuristics are applicable to TP? Write that this is relevant to TP when we have some time between arriving in some city and leaving the city. There are various options: leave the city earlier, or at the latest moment, etc.}
+
+% \subsection{Multiobjective Optimisation}
+
+% In Section XXX we discussed TP instances that require solving more than one objective function, subject to the same constraints, where the objectives may be in conflict, i.e. there is no solution that satisfies all of them simultaneously. In such case, a weighting factor is assigned to each objective and the problem is to optimise the new objective function, obtained by summing all objectives, with each of them multiplied by its weighting factor. In this Section, we briefly discuss existing approaches to multiobjective optimisation.
+
+% \subsubsection{Multiobjective Genetic Algorithms}
+
+% \subsubsection{The Pareto Optimum}
 
 \subsection{Branch and Bound Algorithms}
 \label{branchandbound}
-%% this is an enumerative method: The three most important enumerative methods are (i) implicit enumeration, (ii) dynamic programming, and (iii) branch and bound method
-% We present this technique for instances of TSP-$\Delta$. 
-% \textcolor{red}{
-% The origins of the branch and bound technique date back to the work by \citet{Dantzig54}, where an instance with 49 cities is solved and proved as optimal. The term ``branch and bound'' itself was introduced by \citet{Little63}.} 
 
-% \textcolor{red}{The branch and bound procedure repeatedly breaks up the set of feasible solutions into successively smaller subsets and calculates a \textit{bound} on the objective function value for each subset. The bounds are obtained by performing \textit{relaxation}, i.e. replacing the problem over a given subset with an easier (\textit{relaxed}) problem, such that the solution value of the latter bounds that of the former. Bounds are used to discard certain subsets from further consideration.}
+%\textcolor{red}{ The origins of the branch and bound technique date back to the work by \citet{Dantzig54}, where an instance with 49 cities is solved and proved as optimal. The term ``branch and bound'' itself was introduced by \citet{Little63}.} 
+
+%\textcolor{red}{The branch and bound procedure repeatedly breaks up the set of feasible solutions into successively smaller subsets and calculates a \textit{bound} on the objective function value for each subset. The bounds are obtained by performing \textit{relaxation}, i.e. replacing the problem over a given subset with an easier (\textit{relaxed}) problem, such that the solution value of the latter bounds that of the former. Bounds are used to discard certain subsets from further consideration.}
 
 % \textcolor{red}{
 % Branch and bound procedure can be represented as a rooted tree whose root node corresponds to the original problem and the leafs of the tree form the set of all candidate solutions. The successor nodes of each non-leaf node $i$ correspond to the subproblems, defined by the branching rule.}
 
 % \textcolor{red}{
-% Algorithm \ref{alg:branchandbound} presents a pseudo code of the branch and bound technique. An active problem set $s$ is set to contain the problem set initially (line 3). Then, we branch on each problem $P_{i}$ chosen from $s$. The branching rule generates a set of subproblems $s_{i}$ (line 10). Each subproblem $P_{ij}$ in $s_{i}$ is then checked whether it is ``worse'' than the best one found so far by calculating its bound (line 12, 13). Problems with ``worse'' bounds are being discarded (line 14), otherwise they are added to $s$ for further investigation (line 19). If the current bound is the ``best'' found so far, its value is remembered and used for comparison with next problems. On termination, the algorithm returns the most optimal solution of $P$ (line 23).}
-
-% %% pseudocode for branch and bound procedure:
-% \begin{algorithm}
-% \color{red}
-% \centering
-% \caption{Branch and Bound Procedure}
-% \label{alg:branchandbound}
-% \begin{algorithmic}[1]
-% \Procedure{BB }{Problem $P$}
-% \State \textbf{begin}
-% \State s $\gets$ \{$P$\} \Comment{\textit{put $P$ in the list of active problems set s}}
-% \State bestVal $\gets$ NULL
-% \State currentBest $\gets$ NULL
-% \State currVal $\gets$ NULL
-% \While{s \textbf{not} $\emptyset$}
-% \State $P_{i}$ $\gets$ \Call{choose}{s} \Comment{\textit{choose next subproblem}}
-% \State s $\gets$ s - $P_{i}$
-% \State $s_{i}$ = \Call{branch}{$P_{i}$} \Comment{\textit{branch on $P_{i}$, returns a list of subproblems}}
-% \For{$P_{ij}$ in $s_{i}$}
-% \State currVal $\gets$ \Call{bound}{$P_{ij}$} \Comment{\textit{calculate the bound of $P_{ij}$}}
-% \If{currVal \textbf{worse than} bestVal}
-% \State kill $P_{ij}$ \Comment{\textit{$P_{ij}$ can not lead to an optimal solution}}
-% \ElsIf{$P_{ij}$ is a complete solution}
-% \State bestVal $\gets$ currVal
-% \State currentBest $\gets$ $P_{ij}$
-% \Else
-% \State s $\gets$ s + $P_{ij}$
-% \EndIf
-% \EndFor
-% \EndWhile
-% \State \Return{currentBest}
-% \EndProcedure
-% \end{algorithmic}
-% \end{algorithm}
-
-% \textcolor{red}{
 % Algorithm \ref{alg:branchandbound} does not tell much about the ``choose'', ``branch'' and ``bound'' procedures. This is because there are many variations of their implementations. We discuss some of them in the following parts of this section.}
-
-\begin{enumerate}
-\item Bounds based on the Assignment Problem
-\item Lin-Kernigham heuristic (2-opt, k-opt, the Concorde code) very briefly
-\end{enumerate}
 
 % This relaxation is based on expressing the integer programming version of an optimisation problem $P$ as an assignment problem (AP) after dropping one or more constraints from $P$.
 % The AP relaxation is successfully used for solving TSP \cite{Little63,Eastman58,Bellmore71,tspbible,Baker83} and for the Vehicle Routing Problem (VRP) \citep{Laporte86,vrpbible}. We explain the principles of this relaxation using TSP as a use case.
@@ -543,154 +576,181 @@ common heuristics for TPS, TCTSP, VRP?
 
 % Experiments with ATSP instances have shown that the AP relaxation provides an excellent lower bound \citep{tspbible}. 
 
-% maybe remove this section
-% \subsection{Dynamic Programming}
-% \label{dynamicprogr}
-% Use case: \cite{Christofides81}
-
 % Until the late 1980s, the most effective exact approaches for the vehicle routing problem were mainly branch and bound algorithms \citep{vrpbible}.
 
-% \subsection{Approximation Algorithms}
-% \label{approxalgos}
+%todo: mention dynamic programming and approx algorithms as another way to solve hard problems and cite most important papers. Write little about multiobjective optimsation
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Proposed Approach}
+
 \textcolor{red}{
-We model TP as an integer and as a constraints programming problem. The constraint programming approach is explained in Section \ref{subsec:tpcp} and the integer programming model is presented in Section \ref{subsec:tpip}.
-}
+We model TP as Integer and Constraint Programming problems. The Constraint Programming (CP) approach is explained in Section \ref{subsec:tpcp} and the Integer Programming (IP) model is presented in Section \ref{subsec:tpip}.}
 %Why is this approach chosen? ...
 
 \subsection{CP Model}
 \label{subsec:tpcp}
 \textcolor{red}{
-Let $m$ be equal to $|F|$. We introduce an array $\mathcal{S}$ of size $m$ that represents the TP tour. The domain of each variable in $\mathcal{S}$ is $\{0,...,m\}$. If $\mathcal{S}[i] = j$, then flight $f_{j} \in F$ is the i$^{th}$ flight in the tour. To denote the end of the tour at some position $z + 1< m$, we set $\mathcal{S}[z+1] = 0$. All subsequent variables in $\mathcal{S}$ will then have to be 0 and we say that the tour is of size $z$.
-}
+Let $m = |F|$. We introduce an array $\mathcal{S}$ of size $m+1$ (indexed $0,1,...,m$) that represents the TP tour and a variable $z$ with domain $dom_{z} = \{1,...,m\}$ to denote the number of flights in the trip. If $\mathcal{S}[i] = j$, then flight $f_{j} \in F$ is the $(i+1)^{th}$ flight in the tour. }To denote the end of the tour, we set $\mathcal{S}[z] = 0$. All subsequent variables in $\mathcal{S}$ will then have to be 0. Each variable $v$ in $\mathcal{S}$ is either 0, if no flight is taken at that step, or it is equal to some flight number, that is $dom_{v} = \{0,...,m\}$.
 
-\textcolor{red}{
-TP can then be formulated as the problem of minimising the objective function:}
+TP can then be formulated as the problem of minimising the objective function:
 
 \begin{equation}
 \label{eq:TPwithCPobj}
-\color{red}
-\sum^{m}_{j = 1} c_{k} k, \quad \textrm{where } k=\mathcal{S}[j]
+\sum^{m-1}_{i = 0} c_{\mathcal{S}[i]}
 \end{equation}
 
-\textcolor{red}{subject to the following constraints:}
+subject to constraints (10-16).
 
 \begin{itemize}
 \color{red}
 \Item
-$\mathcal{S}[j] = 0 \, \Rightarrow \, \mathcal{S}[j+1] = 0, \quad \forall \, j, \,  0 \leq j < m$
+$\exists z > 0 \textrm{ such that } \mathcal{S}[i] > 0 \textrm{ for } (0 \leq i \leq z-1) \wedge \mathcal{S}[i] = 0 \textrm{ for } (z \leq i \leq m)$
 \Item
-$\textrm{allDiff}(\mathcal{S}[0],...,\mathcal{S}[z]), \quad \forall \, z, \, 0 \leq z < m \textrm{ s.t } \mathcal{S}[z] \neq 0$
+$\textrm{allDiff}(\mathcal{S}[0],...,\mathcal{S}[z-1])$
 \end{itemize}
 
-\textcolor{red}{Constraint (10) restricts that once the end of the tour is reached at some position $j$, no flights are further added to the tour. Constraint (11) enforces that every flight in the tour is taken only once, using an all-different constraint \citep{Hoeve01}.}
+Constraint (10) restricts that once the end of the trip is reached at some position $z$, no flights are further added to $\mathcal{S}$. Constraint (11) enforces that every flight is taken only once, using an all-different constraint \citep{Hoeve01}.
 
-\textcolor{red}{The five properties of a valid tour are added to the model as the following constraints:}
+The trip properties are added to the model as follows:
+
 \begin{itemize}
-\color{red}
 % property 1:
 \Item
-$\textrm{d}_{\mathcal{S}[0]} = \{j \in \{1,...,m\} : A^{d}_{j} = A_{0}\}$
+$dom_{\mathcal{S}[0]} = \{j \in \{1,...,m\} : A^{d}_{j} = A_{0}\}$
 \item[]
-$(\mathcal{S}[z] \neq 0 \wedge \mathcal{S}[z+1] = 0) \, \Rightarrow \,
-(\textrm{d}_{\mathcal{S}[z]} = \{j \in \{1,...,m\} : A^{a}_{j} = A_{0}\})$
+$dom_{\mathcal{S}[z-1]} = \{j \in \{1,...,m\} : A^{a}_{j} = A_{0}\}$
 % property 2:
 \Item
-$\forall \, i>1, \textrm{ d}_{\mathcal{S}[i]} = \{0, j \in \{1,...,m\} : A^{d}_{j} = A^{a}_{p}, \, p = \mathcal{S}[i-1]\}$
+$dom_{\mathcal{S}[i]} = \{0, j \in \{1,...,m\} : A^{d}_{j} = A^{a}_{p}, \, p = \mathcal{S}[i-1]\}, \quad (1 \leq i < z)$
+\end{itemize}
+\begin{itemize}
+\color{red}
 % property 3:
 \Item
-$t_{p} + \Delta_{p} + C_{r} \leq t_{q}, \textrm{ where } p = \mathcal{S}[j], \, q = \mathcal{S}[j+1],\, r = A^{a}_{q}, \quad \forall \, j, \,  0 \leq j < m - 1$
+$t_{p} + \Delta_{p} + C_{r} \leq t_{q}, \textrm{ where } p = \mathcal{S}[j], q = \mathcal{S}[j+1], r = A^{a}_{q}, \, (0 \leq j < z)$
 % property 4:
 \Item
-$(\mathcal{S}[z] \neq 0 \wedge \mathcal{S}[z+1] = 0) \, \Rightarrow \, (t_{q} + \Delta_{q} \leq T), \textrm{ where } q = \mathcal{S}[z]$
+$t_{q} + \Delta_{q} \leq T, \quad \textrm{ where } q = \mathcal{S}[z-1]$
+\end{itemize}
+\begin{itemize}
 % property 5:
 \Item
-$\forall A_{k} \in A, \, J_{k} = \{ j \in \mathcal{S}[i] \, | \, A^{a}_{j} = A_{k} \textrm{ for } 0 \leq i < m\}. \textrm{ } \forall k, \, A_{k} \in D \, \Rightarrow \, |J_{k}| > 0$
+$\forall A_{k} \in D, \, |\{i: (0 \leq i < z) \wedge A^{a}_{\mathcal{S}[i]} = A_{k} \}| > 0 $
 \end{itemize}
 
-\textcolor{red}{Constraint (12) is equivalent to property (1). Each of the two equations restricts the domain of the corresponding variable in $\mathcal{S}$ to contain only flights that depart from/arrive at the home point. Property (2) is enforced by constraint (13). The domain of each variable in $\mathcal{S}$ is set to include only flights that depart from the arrival airport of the previous flight. Constraints (14) and (15) did not undergo substantial changes from properties (3) and (4). To enforce that every destination airport is visited at least once (constraint (16)), we create a set $J$, where $J_{k}$ is equal to the number of flights that arrive at $A_{k}$ in the tour. If $A_{k}$ is a destination, then the size of $J_{k}$ can only be positive.}
+Constraint (12) is equivalent to trip property (1). It restricts the domains of the first and the $(z-1)^{th}$ variable in $\mathcal{S}$ to contain only flights that depart from/arrive at the home point. Trip property (2) is enforced by constraint (13). The domain of each variable in $\mathcal{S}$ is set to include only flights that depart from the arrival airport of the previous flight. Constraints (14) and (15) correspond to trip properties (3) and (4) respectively. Constraint (16) restricts that the number of the flights that arrive at every destination in the trip is positive, and thus enforces trip property (5).
 
 \subsection{IP Model}
 \label{subsec:tpip}
-\textcolor{red}{Most of the constraints for the TP CP model need modification in order to be applicable to a IP model. In particular, IP does not allow for ``if-then'', ``all-different'' and other non-integer constraints. The model described in this section is a modification of the TP CP model that complies with the rules of integer programming.}
 
-\textcolor{red}{Let $m$ be equal to $|F|$. We introduce a variable $x_{i,j}$ for every $i,j$  between 0 and $m$, such that $x_{i,j} = 1$ if $i^{th}$ flight is $f_{j}$ or 0 otherwise. This variable is somewhat similar to $\mathcal{S}$, used for the CP model, where $\mathcal{S}[i] = p$ is equivalent to $x_{i,p} = 1$. The objective function of TP is to minimise:}
+Most of the constraints for the TP CP model need modification in order to be applicable to an IP model. In particular, IP does not allow for ``if-then'', ``all-different'' and other constraints that are not integer linear inequalities. The model described in this section is a modification of the TP CP model, described in the previous section, that gives constraints in the form of integer linear inequalities, which we also refer to as\textcolor{red}{ \textit{ constraints}.}
+
+Let $m = |F|$. We introduce a variable $x_{i,j}$ for every $i \in \{0,...,m-1\}$ and  $j \in \{1,...,m\}$, such that $x_{i,j} = 1$ if $(i+1)^{th}$ flight is $f_{j}$ or 0 otherwise. This variable is somewhat similar to $\mathcal{S}$, used for the CP model, where $\mathcal{S}[i] = p$ is equivalent to $x_{i,p} = 1$. \textcolor{red}{In addition, we introduce a variable $x_{m,0} = 1$, where flight $f_{0}$ is a ``special'' flight with duration $\Delta_{j} = 0$, date $t_{j} = T$, departure and arrival airports $A^{d}_{j} = A^{a}_{j} = A_{0}$ and cost $c_{j} = 0$, added to $F$.} 
+
+
+From trip property (2) it follows that there must exist some $z < m$, $x_{z,j} = 1$, for which $j \neq 0$ and $A^{a}_{j} = A_{0}$. Thus, constraint (21) indirectly enforces trip property (1). The objective function of TP is to minimise:
 
 \begin{equation}
-\label{eq:TPwithIPobj}
 \color{red}
-\sum_{j=1}^{m} \sum_{i=1}^{m} c_{j} x_{i,j}
+\label{eq:TPwithIPobj}
+\sum^{m-1}_{i} \sum^{m}_{j} c_{j} x_{i,j}
 \end{equation}
 
-\textcolor{red}{subject to:}
+\textcolor{red}{subject to constraints (18-23).}
+
+First, we restrict that only one flight is taken at each step $i$ with constraint (18). Constraint (19) is equivalent to the all-different constraint (11): it enforces every flight to be taken at most once.
 
 \begin{itemize}
 \color{red}
 \Item
-$\forall \, i, \, \sum^{m}_{j = 1}x_{i,j} \leq 1 $
+$\forall i \, (0 \leq i < m), \quad \sum^{m}_{j = 1}x_{i,j} = 1 $
 \Item
-$\forall \, j, \, \sum^{m}_{i = 1}x_{i,j} \leq 1 $
+$\forall j \, (0 \leq j \leq m), \quad \sum^{m-1}_{i = 0}x_{i,j} = 1 $
 \end{itemize}
 
-\textcolor{red}{Constraint (18) restricts that only one flight is taken at each step $i$. Constraint (19) is equivalent to the all-different constraint (11): it enforces every flight to be taken at most once.}
+\textcolor{red}{
+Our method to express the properties of a trip as integer linear inequalities is as follows. Assume that flight $z-1$ is the final flight returning to $A_{0}$, where $1 \leq z \leq m$. We add $m-z+1$ many $f_{0}$ flights, so that the variables $x_{z,0},...,x_{m,0}$ are all equal to 1. We do not add connection time when connecting from $A_{0}$ to $A_{0}$ as part of these flights.}
 
-\textcolor{red}{The five properties of  valid tour are expressed as follows:}
+\textcolor{red}{Constraints (20) and (21) enforce trip property (1). The first flight is restricted to depart from the home point and the last flight must arrive at the home point.}
 
 \begin{itemize}
-\color{red}
 % property 1:
 \Item
-$\sum_{j \in S_{1}} x_{1,j} = 1, \quad \textrm{where } S_{1} = \{j \in \{1,...,m\} : A^{d}_{j} = A_{0}\}$
+$\sum_{j \in S_{1}} x_{0,j} = 1, \quad \textrm{where } S_{1} = \{j \in \{1,...,m\} : A^{d}_{j} = A_{0}\}$
 \Item
-$\sum_{j \in S_{2}} x_{z,j} = 1 \wedge \sum_{j=1}^{m} x_{z+1,j} = 0, \quad \textrm{where } S_{2} = \{j \in \{1,...,m\} : A^{a}_{j} = A_{0}\}$
+$x_{m,0} = 1$
 \end{itemize}
 
-\textcolor{red}{Constraint (20) enforces that the flight taken at step 1 must depart from the home point. Constraint (21) enforces an end to the sequence for some integer $z$ and makes the last flight arrive at the home point. Property (1) of a valid tour is expressed by enforcing both (20) and (21).}
+Property (2) is enforced by defining two sets of flights $S_{1}$ and $S_{2}$, such that all flights in $S_{2}$ depart from the arrival airport of $S_{1}$. Constraint (22) restricts that every flight always departs from the arrival airport of the previous taken flight.
 
 \begin{itemize}
 \color{red}
 % property 2:
 \Item
-$\sum_{j \in S_{1}} x_{i-1,j} = \sum_{j^{\prime} \in S_{2}} x_{i,j^{\prime}}, \quad \forall 1<i\leq z \wedge \forall y \in A, \textrm{ where}$
+$\sum_{j \in S_{1}} x_{i-1,j} = \sum_{j^{\prime} \in S_{2}} x_{i,j^{\prime}}, \quad \forall i \, (1 \leq i \leq m) \wedge \forall y \in A, \textrm{ where}$
 \item[]
-$S_{1} = \{j \in \{1,...,m\} : A^{a}_{j} = y\} \textrm{ and } S_{2} = \{j^{\prime} \in \{1,...,m\} : A^{d}_{j^{\prime}} = y\}$
+$S_{1} = \{j \in \{0,...,m\} : A^{a}_{j} = y\} \textrm{ and } S_{2} = \{j^{\prime} \in \{0,...,m\} : A^{d}_{j^{\prime}} = y\}$
 \end{itemize}
 
-\textcolor{red}{To add property (2) to the IP model, we define the sets of flights $S_{1}$ and $S_{2}$, such that all flights in $S_{2}$ depart from the arrival airport of $S_{1}$. Constraint (22) restricts that every flight always departs from the arrival airport of the previous taken flight, assuming that is it non-zero, where $z$ denotes the number of flights in a tour.}
+\textcolor{red}{
+Trip properties (3) and (4) are represented by constraint (23), which enforces that every flight $f_{j}$ cannot depart until the previous flight $f_{j^{\prime}}$ has arrived, adding connection time, if needed. The connection time $C^{\prime}_{r}$ is equal to the connection time of the arrival airport, unless the current flight is $f_{0}$.
+}
 
 \begin{itemize}
 \color{red}
-% property 3:
+% property 3 and 4:
 \Item
-$\sum_{j = 1}^{m} x_{i-1,j} = \sum_{j^{\prime} \in S} x_{i,j^{\prime}}, \quad \textrm{where } S= \{j^{\prime} \in \{1,...,m\} : t_{j} + \Delta_{j} + C_{r} \leq t_{j^{\prime}}, \, r = A^{d}_{j}\}$
-% property 4:
-\Item
-$\sum_{j \in S} x_{z,j} = 1, \quad \textrm{where } S = \{j \in \{1,...,m\} : t_{j} + \Delta_{j} \leq T\}$
+$x_{i+1,j} + \sum_{j^{\prime} \in F^{\prime}} x_{i,j^{\prime}} \leq 1, \quad \forall i \, (0 \leq i < m) \textrm{ and }  \forall j \, (0 \leq j \leq m)$
+\item[]
+$\textrm{where } F^{\prime} = \{j^{\prime} : f_{j^{\prime}} \in F \wedge t_{j^{\prime}} + \Delta_{j^{\prime}} + C^{\prime}_{r} > t_{j} \} \textrm{ and}$
+\item[]
+$C^{\prime}_{r} =   \begin{cases}
+0, \quad \textrm{ if } j=0 \\
+C_{A^{a}_{j^{\prime}}}, \quad \textrm{ otherwise}
+\end{cases}
+$
 \end{itemize}
-
-\textcolor{red}{Properties (3) and (4) are expressed similarly to (2) by defining the set of flights which the $j$ of every $x_{i,j}$ can be chosen from. The properties are enforced via constraints (23) and (24) respectively.}
 
 % property 5:
-\textcolor{red}{To enforce property (5), we introduce a new variable $\mathcal{D}_{i,j}$. Let $k = |D|$, that is the number of destinations in the TP instance. For every $i$, $\mathcal{D}_{i,j} = 1$ if there is a flight $f_{j}$ in the tour such that $A^{a}_{j} = D_{i}$. Since each destination has to be visited in the tour, the sum of all $i$, there must be a $j$ such that $\mathcal{D}_{i,j} = 1$. This can be expressed as the following IP constraint:}
+Trip property (5) is enforced by restricting that all destination airports must be visited by at least one flight:
 
 \begin{itemize}
-\color{red}
 \Item
-$\forall \, i, \, \sum_{j \in J}\mathcal{D}_{i,j} \geq 1,\quad J = \{j \in \{1,...,m\} : x_{i,j}=1 \wedge A^{a}_{j} = D_{i} \}$
+$\forall A_{k} \in D, \, \sum_{i=0}^{m-1} \sum_{j \in F_{k}} x_{i,j} \geq 1, \quad \textrm{ where } F_{k}= \{j : f_{j}\in F \wedge A^{a}_{j} = A_{k}\} $
 \end{itemize}
+
+\subsection{Modelling soft and hard constraints}
+
+\subsection{Choice of CP and IP solvers}
+
+%Gurobi
 
 \subsection{Experimental Datasets}
 
+This section describes the instances that will be used for the empirical analysis of our algorithms for TP.
+
 \subsubsection{Skyscanner Flights API}
+Skyscanner is a metasearch engine that enables people to find and compare flights, hotels and cars for hire in terms of price, date and duration.
+They offer us access to their in-house flights API. Given a departure and an arrival airport and a date, it returns a set of flights with these attributes.
+
+The Skyscanner flights API will be used during the empirical analysis to construct TP instances with varying size and properties. Testing our algorithms on these instances will show the effectiveness of our algorithms on real-world problems.
+
+\subsection*{Generating instances from the Skyscanner data}
 
 \subsubsection{Randomly Generated TP instances}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Work Plan}
 
-show how you plan to organize your work, identifying intermediate deliverables and dates.
+Implement the IP and CP model for TP. (mid December-mid January)
+
+Implement support for the soft and hard constraints. (mid January - mid February)
+
+Generate TP instances for empirical evaluation. (mid February - 1st March)
+
+Run the algorithms on the test data and analyse results. (March-April)
+
+Submission deadline: 21 April 2017, 12PM 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % it is fine to change the bibliography style if you want
