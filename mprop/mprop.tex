@@ -41,27 +41,26 @@
 %\usepackage[final]{pdfpages}
 
 \begin{document}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{The Traveller's Problem}
 \author{Iva Stefanova Babukova}
 \date{18 December 2016}
 \maketitle
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tableofcontents
 \educationalconsent
 \newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}\label{intro}
+\textcolor{red}{
+The Traveller’s Problem (TP) is a computational task whose extensions and variations are often encountered by travellers around the world.
+Given a set of airports, a set of flights, a set of destinations that is a subset of the airports, and a special airport $A_{0}$, TP asks for finding a travel schedule that starts and finishes at $A_{0}$, visits all destinations and is in accordance with additional constraints specified by the traveller.}
 
-In this work we present the Traveller's Problem (TP), a computational task whose extensions and variations are often encountered by travellers around the world. The task is concerned with creating a valid travel schedule, using airplanes as a means of transportation and in accordance with certain constraints specified by the traveller.
+\textcolor{red}{This work gives a formal description of TP and some of its main extensions, proves a result concerning its complexity, investigates existing methods to solve problems of similar complexity and presents a plan of action for solving TP.
+It is organised as follows. Section \ref{sec:tpformulation} gives a formal definition of TP, followed by series of example problem instances in Section \ref{sec:tpexample}. An important result about the complexity of TP is proved in Section \ref{sec:tpcomplexity}. Section \ref{sec:existingwork} is the background survey. It discusses common techniques to solve problems similar to TP with respect to their complexity and formulation. All problems investigated in this work are defined in Section \ref{npcompleteproblems}. Our proposed approach is presented in Section \ref{sec:proposedapproach}. This includes two distinct models for TP, evaluation plan and a discussion on the datasets that will be used for the experiments. Finally, Section \ref{sec:workplan} presents a detailed plan of work.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Problem Formulation}
+\label{sec:tpformulation}
 
 Each instance of TP consists of:
 
@@ -104,7 +103,7 @@ In this work, we refer to these properties as \textit{trip properties}. Note tha
 % these statements are only really meaningful when you relate TP to TSP and also to VRP.
 % \textcolor{red}{Also note that the current problem formulation accepts asymmetric flight costs, i.e. one might have two flights $f_{i}$ and $f_{j}$ such that $A^{d}_{i} = A^{a}_{j}$ and $A^{a}_{i} = A^{d}_{j}$. That does not imply that $c_{i} = c_{j}$. Moreover, the problem formulation does not restrict the flight cost to depend on the flight duration. Consequently, this implies that TP is \textit{asymmetric} and in general the flight cost need not satisfy the \textit{triangle inequality}.}
 
-The \textit{optimization} version of TP (TPO) asks for an \textit{optimal} solution \textcolor{red}{$s$} which minimizes the total sum of the prices of the flights in $s$, denoted by $c(s)$.
+The \textit{optimization} version of TP (TPO) asks for an \textit{optimal} solution $s$ which minimizes the total sum of the prices of the flights in $s$, denoted by $c(s)$.
 
 The \textit{decision} version of TP (TPD) asks whether there exists a valid sequence of flights $s$, such that $c(s)$ is less than or equal to some given integer $B$. The solution of this problem is a `yes' or `no' answer.
 
@@ -139,6 +138,7 @@ If all requirements are equally important for the traveller, we have to solve a 
 Note that most of the aforementioned constraints can be viewed as either hard or soft, depending on the user requirements. It is therefore suggested that any attempt at an investigation of TP assumes as an additional non-functional requirement that any proposed model to solve TP is flexible and can be easily extended by adding, removing and modifying the aforementioned constraints.
 
 \section{Worked Examples}
+\label{sec:tpexample}
 We present an example instance of TP and comment on some of its solutions.
 
 \begin{example}
@@ -232,20 +232,33 @@ $$ s^{\prime\prime} = \langle GF1, FB2, BP4, PM6, MF9, FA10, AG13\rangle $$
 The total cost $c(s^{\prime\prime})$ is equal to 729, which is more expensive than $s$ and $s^{\prime}$.
 \end{solution}
 
-\section{List of Problems}
+\section{Investigated Problems}
 \label{npcompleteproblems}
 
 This Section gives a list of known problems, referred to in this work when proving the NP-hardness of TP (Section \ref{npcompleteproof}) and when reviewing the existing work (Section \ref{sec:existingwork}). The problems, marked with an asterisk ($\ast$) next to their title, are known to be NP-complete \citep{thebible}.
 
 \begin{enumerate}
 
-% \item \textbf{Vehicle-Routing Problem \textsuperscript{*} (VRP)}
-% \begin{instance}
-% .
-% \end{instance}
-% \begin{question}
-% .
-% \end{question}
+\item \textbf{Vehicle-Routing Problem \textsuperscript{*} (VRP)}
+\begin{instance}
+A set $A$ of $n$ cities, where $D \in A$ is the \textit{depot} and each city $i$ has demand $c_{i}$, a fleet of $m$ vehicles $V$, where vehicle $k$ has capacity $q_{k}$, a distance $d(i,j)$ between two cities $i$ and $j$ and a positive integer $B$.
+\end{instance}
+
+\begin{question}
+\color{red}
+Is there a set $\mathcal{S}$ consisting of $m$ sequences $s_{1},...,s_{m}$, of the cities in $A$, called \textit{tours}
+where for every vehicle $k$ $(1 \leq k \leq m)$:
+\begin{itemize}
+\item $s_{k} = \langle A_{s_{k,1}},...,A_{s_{k,p_{k}}} \rangle$, \quad where $p_{k}$ is the number of the cities in the tour of $k$,
+\item $\sum_{i = 1}^{p} c_{A_{s_{k,i}}} \leq q_{k}$,
+\item $A_{s_{k,1}} = D$,
+\item $s_{i} \cap s_{j} = \{D\}$, \quad $(1 \leq i < j \leq m),$
+\item $s_{1} \cup s_{2} ... \cup s_{m} = A$,
+\end{itemize}
+and
+$$ \sum_{k=1}^{m} C(s_{k}) \leq B \textrm{, where } C(s_{k}) = \bigg( \sum_{i=1}^{p_{k}} d(A_{s_{k,i}}, A_{s_{k,i+1}}) \bigg) + d(A_{s_{k,k_{p}}}, A_{s_{k,1}}) \textrm{ ?}$$
+\end{question}
+
 
 \item \textbf{Travelling Salesman Problem \textsuperscript{*} (TSP) \footnote{Note that TSP is a special case of VRP when only one vehicle is allowed.}}
 \begin{instance}
@@ -253,8 +266,8 @@ Set $A$ of $n$ cities, distance $d(A_{i}, A_{j})$ between each pair of cities $A
 \end{instance}
 
 \begin{question}
-Is there a tour of $A$ having length $B$ or less, i.e., a permutation of cities $\gamma = \langle A_{\pi(1)}, A_{\pi(2)},...,A_{\pi(n)} \rangle $ of $A$ such that the total travel distance $L_{\gamma}$:
-$$L_{\gamma} = \bigg( \sum_{i=1}^{n-1} d(A_{\pi(i)}, A_{\pi(i+1)}) \bigg) + d(A_{\pi(n)}, A_{\pi(1)}) \leq B \quad \textrm{?}$$
+Is there a tour of $A$ having length $B$ or less, i.e., a permutation of cities $\gamma = \langle A_{\pi_{1}},...,A_{\pi_{n}} \rangle $ of $A$ such that the total travel distance $L_{\gamma}$:
+$$L_{\gamma} = \bigg( \sum_{i=1}^{n-1} d(A_{\pi_{i}}, A_{\pi_{i+1}}) \bigg) + d(A_{\pi_{n}}, A_{\pi_{1}}) \leq B \quad \textrm{?}$$
 \end{question}
 
 \item \textbf{Travelling Salesman Problem Under the Triangle Inequality\textsuperscript{*} (TSP-$\Delta$) \footnote{Note that this problem is a special case of TSP.}}
@@ -263,19 +276,20 @@ Set $A$ of $n$ cities, distance $d(A_{i}, A_{j})$ between each pair of cities $A
 \end{instance}
 
 \begin{question}
-Is there a tour of $A$ having length $B$ or less, i.e., a permutation of cities $\gamma = \langle A_{\pi(1)}, A_{\pi(2)},...,A_{\pi(n)} \rangle $ of $A$ such that the total travel distance $L_{\gamma}$:
-$$L_{\gamma} = \bigg( \sum_{i=1}^{n-1} d(A_{\pi(i)}, A_{\pi(i+1)}) \bigg) + d(A_{\pi(n)}, A_{\pi(1)}) \leq B \quad \textrm{?}$$
+Is there a tour of $A$ having length $B$ or less, i.e., a permutation of cities $\gamma = \langle A_{\pi_{1}},...,A_{\pi_{n}} \rangle $ of $A$ such that the total travel distance $L_{\gamma}$:
+$$L_{\gamma} = \bigg( \sum_{i=1}^{n-1} d(A_{\pi_{i}}, A_{\pi_{i+1}}) \bigg) + d(A_{\pi_{n}}, A_{\pi_{1}}) \leq B \quad \textrm{?}$$
 \end{question}
 
 \item \textbf{Time-Constrained TSP\textsuperscript{*} (TCTSP) \footnote{Note that this problem is a generalisation of TSP.}}
 
 \begin{instance}
-Set $A$ of $n$ cities, distance $d(A_{i}, A_{j})$ between each pair of cities $A_{i}$, $A_{j}$ $\in$ $A$, positive integer $B$, lower and upper bounds $l_{i}$ and $u_{i}$ respectively for each city $A_{i}$ that specify its time window.
+Set $A$ of $n$ cities, distance $d(A_{i}, A_{j})$ between each pair of cities $A_{i}$, $A_{j}$ $\in$ $A$, positive integer $B$, lower and upper bounds $l_{i}$ and $u_{i}$ respectively for each city $A_{i}$ that specify its time window, where time is a scalar transformation of distance.
 \end{instance}
 
 \begin{question}
-Is there a permutation of cities $\gamma = \langle A_{\pi(1)}, A_{\pi(2)},...,A_{\pi(n)} \rangle$ of $A$, such that each city $A_{\pi_{j}}$ is visited at time $t_{j}$, where $l_{j} \leq t_{j} \leq u_{j}$, $t_{j} < t_{j+1}$ for ($1 \leq j \leq n-1 $) and 
-$$L_{\gamma} = \bigg( \sum_{i=1}^{n-1} d(A_{\pi(i)}, A_{\pi(i+1)}) \bigg) + d(A_{\pi(n)}, A_{\pi(1)}) \leq B \quad \textrm{?}$$
+Is there a permutation of cities $\gamma = \langle A_{\pi_{1}},...,A_{\pi_{n}} \rangle$ of $A$, such that each city $A_{\pi_{i}}$ is visited at time $t_{\pi_{i}}$, where $l_{\pi_{i}} \leq t_{\pi_{i}} \leq u_{\pi_{i}}$, \textcolor{red}{ $t_{\pi_{i}} \geq t_{\pi_{i-1}} + d(A_{\pi_{i-1}},A_{\pi_{i}})$ for $(2 \leq i \leq n)$, $t_{\pi_{i}} \geq t_{\pi_{n}} + d(A_{\pi_{n}},A_{\pi_{1}})$},
+ and 
+$$L_{\gamma} = \bigg( \sum_{i=1}^{n-1} d(A_{\pi_{i}}, A_{\pi_{i+1}}) \bigg) + d(A_{\pi_{n}}, A_{\pi_{1}}) \leq B \quad \textrm{?}$$
 
 \end{question}
 
@@ -289,18 +303,26 @@ Is there a sequence $S = \{st_{i} : i \in J, \forall J \in N\}$ of starting time
 \end{question}
 
 \item \textbf{Time-Constrained Vehicle Routing Problem\textsuperscript{*}
-(TCVRP)}
+(TCVRP) \footnote{Note that this problem is a generalisation of VRP.}}
 \begin{instance}
-\color{red}
-A set $A$ of $n$ cities, where $D \in A$ is the \textit{depot} and each city $i$ has demand $d_{i}$, a fleet of $m$ vehicles $V$, where vehicle $k$ has capacity $q_{k}$, a travel cost $c(i,j)$ between two cities $i$ and $j$, lower and upper bounds $l_{i}$ and $u_{i}$ respectively for each city $i$ that specify its time window and a positive integer $B$.
+A set $A$ of $n$ cities, where $D \in A$ is the \textit{depot} and each city $i$ has demand $c_{i}$, a fleet of $m$ vehicles $V$, where vehicle $k$ has capacity $q_{k}$, a distance $d(i,j)$ between two cities $i$ and $j$, lower and upper bounds $l_{i}$ and $u_{i}$ respectively for each city $i$ that specify its time window, where time is a scalar transformation of distance, and a positive integer $B$.
 \end{instance}
 
 \begin{question}
 \color{red}
 Is there a set $\mathcal{S}$ consisting of $m$ sequences $s_{1},...,s_{m}$, of the cities in $A$, called \textit{tours}
-where $s_{k} = \langle A_{k(1)},...,A_{k(p)} \rangle$ and $\sum_{i = 1}^{p} d_{A_{k(i)}} \leq q_{k}$ for $1 \leq k \leq m$ and $0 \leq p \leq n$ and $A_{k(1)} = D$ with $s_{1} \cap s_{2} ... \cap s_{m} = D$ and $s_{1} \cup s_{2} ... \cup s_{m} = A$, where each city $A_{k(i)}$ is visited at time $t_{i}$ with $l_{i} \leq t_{i} \leq u_{i}$ and
-
-$$ \sum_{k=1}^{m} C(s_{k}) \leq B \textrm{, for } C(s_{k}) = \bigg( \sum_{i=1}^{p-1} c(A_{k(i)}, A_{k(i+1)}) \bigg) + c(A_{k(p)}, A_{k(1)}) \textrm{ ?}$$
+where for every vehicle $k$ $(1 \leq k \leq m)$:
+\begin{itemize}
+\item $s_{k} = \langle A_{s_{k,1}},...,A_{s_{k,p_{k}}} \rangle$, \quad where $p_{k}$ is the number of the cities in the tour of $k$,
+\item $\sum_{i = 1}^{p} c_{A_{s_{k,i}}} \leq q_{k}$,
+\item $A_{s_{k,1}} = D$,
+\item $s_{i} \cap s_{j} = \{D\}$, \quad $(1 \leq i < j \leq m),$
+\item $s_{1} \cup s_{2} ... \cup s_{m} = A$,
+\item each city $A_{s_{k,i}}$ is visited at time $t_{s_{k,i}}$ with $l_{s_{k,i}} \leq t_{s_{k,i}} \leq u_{s_{k,i}}$,
+\item $t_{s_{k,i}} \geq t_{s_{k,i-1}} + d(A_{s_{k,i}},A_{s_{k,i-1}})$, \quad $(2 \leq i \leq n) \footnote{We do not care about the time window on the depot}$,
+\end{itemize}
+and
+$$ \sum_{k=1}^{m} C(s_{k}) \leq B \textrm{, where } C(s_{k}) = \bigg( \sum_{i=1}^{p_{k}} d(A_{s_{k,i}}, A_{s_{k,i+1}}) \bigg) + d(A_{s_{k,k_{p}}}, A_{s_{k,1}}) \textrm{ ?}$$
 \end{question}
 
 \item \textbf{The Assignment Problem (AP)}
@@ -316,6 +338,7 @@ Find a bijection $f: A \gets B$ such that $\sum_{a\in A} c(a,f(a))$ is minimised
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Complexity of TP}
+\label{sec:tpcomplexity}
 We state a theorem about the complexity of TP and prove it.
 \begin{theorem}
 TPD is NP-complete.
@@ -366,9 +389,6 @@ Therefore, TP is in NP and the decision version of TSP can be reduced to TPD in 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background Survey}
-
-%present an overview of relevant previous work including articles, books, and existing software products. Critically evaluate the strengths and weaknesses of the previous work.
-
 \label{sec:existingwork}
 This section presents a detailed review of some existing methods to approach NP-hard problems. In Section \ref{ip} we model TSP as a system of linear integer inequalities and showed a method for computing a lower bound on the cost of the tour that is widely used in the literature. Section \ref{cp} introduces Constraint Programming, where we discuss heuristics and give an example of how heuristics can be specifically designed for a given problem, using JSSP. In Section \ref{sec:tctspalgos} and Section \ref{sec:tcvrpalgos} we discuss some main approaches to solve two NP-hard problems that are somewhat similar to TP, namely TCTSP and TCTSP.
 We study 4 different NP-hard problems: TSP, JSSP, TCTSP and TCVRP, all defined in Section \ref{npcompleteproblems}. The purpose of this is to identify successful techniques to model and solve hard problems that could be applied to TP.
@@ -433,7 +453,7 @@ The formulation of the general TSP problem is given by the objective function (\
 \subsubsection{The Assignment Problem Relaxation}
 %The Assignment Problem (AP), formulated in Section \ref{npcompleteproblems}, can be represented with the tools of linear programming and it can be solved in at most $\mathcal{O}(n^{3})$ steps \citep{Kuhn55}. 
 
-The assignment problem (AP) relaxation consists of removing the subtour elimination constraint from the TSP IP model and minimising the objective function (\ref{eq:objfunc}) only subject to constraint (\ref{eq:one}). This is well known and extensively used relaxation \cite{Little63,Eastman58,Bellmore71,Baker83,Laporte86}. In this section we explain how this method helps in solving NP-hard problems, using TSP as an example.
+The assignment problem (AP) relaxation consists of removing the subtour elimination constraint from the TSP IP model and minimising the objective function (\ref{eq:objfunc}) only subject to constraint (\ref{eq:one}). This is well known and extensively used relaxation \cite{Fischetti92,Jonker80,Eastman58,Laporte86}. In this section we explain how this method helps in solving NP-hard problems, using TSP as an example.
 
 Let $\pi^{\star}$ be the resulting problem after performing AP relaxation on some instance $\pi$ of TSP. 
 The feasible solutions in $\pi$ correspond to travelling salesman tours and we let $opt(\pi)$ denote an optimal solution. The feasible solutions in $\pi^{\star}$ correspond to perfect matchings and we let $opt(\pi^{\star})$ correspond to a perfect matching of minimum weight.
@@ -469,7 +489,7 @@ Every $sol(\pi^{\star})$ can be translated to a path through the cities in $\pi$
 Note that a feasible solution in $\pi$ maps to a feasible solution in $\pi^{\star}$, but the converse need not be true in general, as the example in Figure \ref{fig:invalidAP} shows.
 
 Let $opt(\pi^{\star})$ have total edge weight equal to $\alpha$. Suppose that $opt(\pi^{\star})$ does not map to a tour in $\pi$. Therefore, $opt(\pi)$ must have length at least $\alpha$. Conversely, suppose that $opt(\pi^{\star})$ can be mapped to $opt(\pi)$. Therefore, the length of $opt(\pi)$ is equal to $\alpha$. Hence, the length of $opt(\pi)$ is greater than or equal to the value of $opt(\pi^{\star})$.
-In the existing work, this property is used to derive a lower bound on the cost of $opt(\pi)$ \citep{Little63,Dantzig54,Baker83}. This approach is frequently combined with a branch and bound technique \citep{tspbible}, which is discussed in Section \ref{branchandbound}.
+In the existing work, this property is used to derive a lower bound on the cost of $opt(\pi)$ \citep{Jonker80,Dantzig54,Dantzig59}. This approach is frequently combined with a branch and bound technique \citep{tspbible}, which is discussed in Section \ref{branchandbound}.
 
 %\textcolor{blue}{The relation between TSP and AP is explained very nicely by \citet{Flood56}}
 
@@ -480,7 +500,17 @@ In the existing work, this property is used to derive a lower bound on the cost 
 
 \citet{Dantzig54} solve the constructed TSP model using a novel method for that time, which they call the ``cutting-plane method''. We point the interested reader back to \citep{Dantzig54} and \citep{Dantzig59}, where in the latter the cutting-plane method is explained in more detail using a 10 city TSP instance as an example.
 
-%\textcolor{blue}{What is the complexity of the AP? Why is this not the best lower bound for TSP? Write about the min-weight spanning tree bound, briefly and say that it is better than this one. Compare their complexities.}
+\textcolor{red}{
+The number of solved instances using the AP relaxation varies. \citet{Dantzig54} executes the algorithm by hand on a 49 city problem instance and there is no data on the performance of the algorithm. \citet{Jonker80} report on experiments with up to 150 city instances solved. However, the algorithms running time is not specified. The greatest number of cities solved by \citet{Fischetti92} is 200. The longest time taken to solve a 200 city instance is 4.42 seconds, using a VAX 11/780 computer architecture.
+}
+
+% todo: find out more about Concorde and summarise it.
+\textcolor{red}{
+\citet{Applegate03} implements the work of \citet{Dantzig54} and incorporates it into the Concorde TSP Solver \citep{concorde}, which ``is widely regarded as the fastest TSP solver, for large instances, currently in existence.'' \citep{Mulder03}. This implementation is capable of solving instances with 1,000,000 cities or more \citep{Applegate03}.
+}
+
+% what concorde can solve: \citep{concordeBenchmarks}
+% tsp benchmarks: http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/STSP.html
 
 \subsection{Constraint Programming}
 \label{cp}
@@ -525,13 +555,12 @@ Two different heuristics for the sequencing of $i$ and $j$, based on the size of
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm, width=6cm]{images/slack.png}
-\caption{The values of $slack(i, j)$ (the length of the bottom pink line) and $slack(j, i)$ (the length of the top pink line), \textcolor{red}{ where $est_{x}$ and $lft_{x}$ refer to the earliest start and finish time of an operation $x$ respectively.} }
+\caption{The values of $slack(i, j)$ (the length of the bottom pink line) and $slack(j, i)$ (the length of the top pink line), where $est_{x}$ and $lft_{x}$ refer to the earliest start and finish time of an operation $x$ respectively.}
 \label{fig:slack}
 \end{figure}
 
-\textcolor{red}{
 Min-slack ordering selects an ordering of $i$ and $j$ that gives minimum time flexibility for the tasks. For instance, min-slack heuristics would assign $o(i,j) = 1$ for the example in Figure \ref{fig:slack}.
-Max-slack heuristic orders the operations, such that there is greatest time flexibility for the tasks. In the example in Figure \ref{fig:slack}, max-slack would assign $o(i,j) = 0$, since $slack(j, i) > slack(i, j)$.}
+Max-slack heuristic orders the operations, such that there is greatest time flexibility for the tasks. In the example in Figure \ref{fig:slack}, max-slack would assign $o(i,j) = 0$, since $slack(j, i) > slack(i, j)$.
 
 We relate the idea behind min-slack to the principles of the \texttt{dom} heuristic. If the starting times of $i$ and $j$ are variables, then the assignment of $o(i,j)$ based on min-slack would decrease the domain of the starting time of the second scheduled process. As opposed to min-slack, max-slack would maximize the number of possible starting times. We recognise that this idea can be traced back to the work of \citet{Geelen92} which proposes a principle that each variable should be assigned the least constraining value in its domain.
 
@@ -547,22 +576,16 @@ We relate the idea behind min-slack to the principles of the \texttt{dom} heuris
 \label{branchandbound}
 %In this section we present a branch and bound based solutions for the TCTSP problem.
 
-\subsection{Algorithms for Time-Constrained TSP}
+\subsection{Time-Constrained TSP}
 \label{sec:tctspalgos}
-\textcolor{red}{This section discusses some existing approaches to model and solve the Time-Constrained TSP (TCTSP). Although there is substantial amount of work done on TCTSP, most of the attention in the literature seems to be for TSP \citep{tspbible} and many of the methods to solve TCTSP are TSP models that are adapted to include time windows constraints. We first explain a popular method to model TCTSP and briefly outline few existing solution techniques. The second part of the section gives an example of an exact algorithm for TCTSP.}
+Time-Constraint TSP (TCTSP), also known as TSP with Time Windows (TSPTW) is a generalisation of TSP, defined in Section \ref{npcompleteproblems}.
+Although there is a substantial amount of work done on TCTSP, most of the attention in the literature seems to be for TSP \citep{tspbible} and many techniques for TCTSP are TSP models, adapted to include time windows constraints. This section is a discussion of common approaches to model and solve TCTSP. Section \ref{sec:baker83} presents a popular way to model TCTSP, influenced by the research in scheduling. Section \ref{sec:tctspmain} outlines other popular techniques for TCTSP.
 
-\textcolor{red}{A disjunctive graph for TCTSP is a \textit{mixed} graph $G=(V,E,A)$, where $V$ is the set of vertices, representing all cities in the problem, $E$ is the set of the undirected edges and $A$ is the set of directed edges. For every two vertices $i$ and $j$, $e(i,j) \in E$ if and only if $i$ and $j$ can be visited in either order, and $e(i,j) \in A$ if and only if $i$ must be visited before $j$. The disjunctive graph is used extensively for TCTSP \citep{tspbible}.}
-
-\textcolor{red}{\citet{tspbible} present a summary of the most used techniques to model TCTSP. One of the discussed models is similar to the TSP IP formulation in Section \ref{sec:iptspformulation} with each of the variables adapted to consider specific time periods. Another model is based on the disjunctive graph model with dual labels on vertices, that is, each label is a tuple $(i, t)$, meaning that city $i$ is visited at time $t$. The work by \citet{Baker83} presented in Section \ref{sec:baker83} is also an example of a solution that utilizes this model.}
-
-\textcolor{red}{\citet{ariglianotime} work on TCTSP with asymmetric distances 
-and constructs an integer linear programming model using a variation of the cutting planes algorithm by \citet{Dantzig54}. The paper argues that the limits of existing TCTSP algorithms like \citep{Baker83} is that they assume that the travel time is constant. \citet{ariglianotime} make TCTSP seem more related to real-world problems by introducing the notion of \textit{travel speed}, \textit{congestion factor} and \textit{travel time}, where the latter is a function of the former two variables.}
-
-\textcolor{red}{\citet{Hurkala15} is a recent work that is believed to be the first to consider problems with multiple time windows. The paper agrees with \citet{ariglianotime} that the constant travel time assumption is unrealistic and the TCTSP model is adapted to changing travel times. As well as developing a novel algorithm for TCTSP with multiple time windows and changing travel time, it presents and empirical evaluation of three metaheuristics, which are often utilised for scheduling problems.}
-
-\subsubsection{An Exact Algorithm for TCTSP}
+\subsubsection{The dual model for TCTSP}
 \label{sec:baker83}
-\textcolor{red}{In this Section we discuss an exact algorithm for TCTSP introduced by \citet{Baker83}, based on a branch and bound procedure and on the disjunctive graph model. The model assumes that time is a scalar transformation of distance, i.e. time and distance may be used interchangeably. \citet{Baker83} algorithm works for instances with symmetric inter city distances under the triangle inequality, where we say that the distance between two cities $i$ and $j$ is \textit{symmetric} if $d(i, j) = d(j, i)$.}
+
+%% todo: what does this dual model consist of?
+\textcolor{red}{The dual model for TCTSP is introduced by \citet{Baker83} and it is referred to as ``the most elegant'' method to model TCTSP \citep{Chan05}. It consists of a system of linear integer inequalities that yields a disjunctive graph, known from scheduling theory \citep{Baker83}. The solution implements a branch and bound procedure with bounds calculated using the longest path algorithm. Baker's algorithm works for instances with symmetric inter city distances under the triangle inequality, where the distance between two cities $i$ and $j$ is \textit{symmetric} if $d(i, j) = d(j, i)$. Moreover, if the traveller arrives at city $i$ at time $t_{i} < l_{i}$, she is allowed to wait until the $t_{i} = l_{i}$ and the time window opens.}
 
 \textcolor{red}{The term \textit{time window} for a city $i$ refers to the period of time between $l_{i}$ and $u_{i}$ in which $i$ has to be visited. \citet{Baker83} introduces a variable $t_{i}$ for each city $i$ that determines the time $i$ is visited in the tour and an additional variable $t_{n+1}$ that determines the time at which the tour is completed. The objective function of the problem is:}
 
@@ -572,64 +595,102 @@ and constructs an integer linear programming model using a variation of the cutt
 \textrm{minimise } \{ t_{n+1} - t_{1} \}
 \end{equation}
 
-\textcolor{red}{subject to a set of 5 constraints that enforce that there is sufficient travel time between each two subsequent cities in the tour and that the time each city is visited is within the required time window. The model allows for the traveller to arrive at city $i$ at time $t_{i} < l_{i}$, provided that she waits in the city until the time window opens before leaving $i$. Moreover, although a single upper and lower bound on the time window is assumed, the model could be easily extended to include sets of distinct time windows for each city \citep{Baker83}.}
+subject to 
 
-\textcolor{red}{The objective function of the model indirectly imposes the constraint that the number of visits to each city has to be one. Suppose the TCTSP algorithm returned a tour containing city $i$ more than once. Then the tour would not be optimal, because one could do better by cutting one of the visits to $i$ until $i$ is visited only once \footnote{This is true, since the distances are under the triangle inequality.}.}
+\begin{itemize}
+\Item
+$t_{i} - t_{1} \geq d(1,i), \quad (2 \leq i \leq n )$
+\Item
+$|t_{i} - t_{j}| \geq d(i,j), \quad (2 \leq j < i)$
+\Item
+$t_{n+1} - t_{i} \geq d_{i,1}, \quad (2 \leq i \leq n )$
+\Item
+$t_{i} \geq 0, \quad (1 \leq i \leq n )$
+\Item
+$l_{i} \leq t_{i} \leq u_{i}, \quad (2 \leq i \leq n )$
+\end{itemize}
 
-\textcolor{red}{\citet{Baker83} models TCTSP as a disjunctive graph and uses a relaxation of the TCTSP model that is equivalent to the longest path problem\footnote{The longest path problem asks to find a path of maximum length in a given graph.} in a disjunctive graph with $n+1$ vertices. The solution to the relaxed problem is used as a lower bound on the tour distance during the bounding procedure of the branch and bound algorithm.}
+\textcolor{red}{This model allows for the traveller to arrive at city $i$ at time $t_{i} < l_{i}$, provided that she waits in $i$ until the time window opens. Moreover, although a single upper and lower bound on the time window is assumed, the model could be easily extended to include sets of distinct time windows for each city \citep{Baker83}.}
 
-\textcolor{red}{\citet{Baker83} enforces that the time windows constraint by adding dual labelling on the vertices in the disjunctive graph within the branch and bound procedure. The second label of each vertex $i$ is the value of the longest path from vertex 1 to $i$ and this value is precisely $t_{i}$.}
+\textcolor{red}{The objective function of the model indirectly imposes the constraint that the number of visits to each city has to be one. Suppose the TCTSP algorithm returned a tour containing city $i$ more than once. Then the tour would not be optimal, because one could do better by cutting one of the visits to $i$ until $i$ is visited only once \footnote{This is true, since the distances are under the triangle inequality and the traveller is allowed to arrive at a city before the start of the time window, provided that she waits until it opens.}.}
 
-\textcolor{red}{The experiments described in \citep{Baker83} show that this approach is effective on small to moderate-sized instances and that its efficiency greatly depends on the number of overlapping time windows. The results show that instances with greater number of overlapping time windows are easier to solve. We conjecture that the reason for this could be that the model is more constrained and therefore the number of possible subproblems that have to be checked during the branch and bound procedure is smaller.}
+\textcolor{red}{
+A \textit{disjunctive graph} is a way of modelling a system of tasks to be scheduled within certain time constraints, introduced mainly for scheduling problems \citep{tspbible}. For TCTSP, this is a graph $G=(V,E,A)$, where the set of vertices $V$ represents all cities in the problem, $E$ is the set of undirected edges and $A$ is the set of directed edges. For every two vertices $i$ and $j$, $e(i,j) \in E$ if and only if cities $i$ and $j$ can be visited in either order, in which case they have \textit{disjunctive} relation, and $e(i,j) \in A$ if and only if $i$ must be visited before $j$. Constraint (11) represents two discrete cases and thus yields the disjunctive relations between cities.}
+
+\textcolor{red}{Using previously shown relation between TSP and the longest path problem \citep{Hardgrave62}, \citet{Baker83} relaxes constraints (11) and (14) and shows that the resulting relaxed problem $P$ is equivalent to the longest path problem \footnote{The longest path problem asks to find a path of maximum length in a given graph.}. Although this problem is also NP-hard, it is hoped that it is easier than TSP \citep{Hardgrave62}.}
+
+\textcolor{red}{
+The bounding procedure of the branch and bound algorithm consists of finding the longest path in every relaxed subproblem. For every non-discarded subproblem, the additional cases from constraint (11) are added.
+\citet{Baker83} enforces constraint (14) by adding dual labelling on the vertices in the disjunctive graph within the branch and bound procedure. The first label of a vertex $v$ that represents city $i$ is $i$ and the second label of 
+$v$ is the value $p_{i}$ of the longest path from vertex 1 to $i$. If $p_{i} > u_{i}$, then the current assignment of values to variables gives no solution. If $p_{i} < l_{i}$, then the traveller has to wait at $i$ until the time window opens. Thus, the value of $p_{i}$ is $t_{i}$.}
+
+\textcolor{red}{\citet{Baker83} conduct experiments using 20 problem instances of size 9, 13, 22, 30 or 51 cities with varying percent of overlapping windows.
+The experiments show that this approach is effective on small to moderate-sized instances and that its efficiency greatly depends on the number of overlapping time windows. For each set of instances with equal city size, the problem that took most CPU time is the one with least number of overlapping windows. For the 51 city problem the program did not terminate for this instance.
+Therefore, TCTSP instances with greater number of overlapping time windows are easier to solve. We conjecture that the reason for this could be that the model is more constrained and therefore the number of possible subproblems that have to be checked during the branch and bound procedure is smaller.}
+
+\subsubsection{Other Approaches to TCTSP}
+\label{sec:tctspmain}
+
+\citet{tspbible} present a summary of the most used techniques to model TCTSP. One of them is similar to the TSP IP formulation in Section \ref{sec:iptspformulation}, having each of the variables adapted to consider specific time periods. \citet{tspbible} also discuss the dual model, presented in Section \ref{sec:baker83}, as an example of an effective technique.
+
+\citet{ariglianotime} work on TCTSP with asymmetric distances 
+and construct an integer linear programming model using a variation of the cutting planes algorithm. The paper argues that a limitation of existing TCTSP algorithms such as \citep{Baker83} is that they assume that the travel time is constant. \citet{ariglianotime} make TCTSP seem more related to real-world problems by introducing the notion of \textit{travel speed}, \textit{congestion factor} and \textit{travel time}, where the latter is a function of the former two variables. \citet{ariglianotime} can solve instances with up to 40 cities.
+
+\citet{Hurkala15} is a recent work that is believed to be the first to consider problems with multiple time windows. The paper agrees with \citet{ariglianotime} that the constant travel time assumption is unrealistic and the TCTSP model is also adapted to changing travel times. \citet{Hurkala15} introduces a novel algorithm for this re-formulation of TCTSP and combines it with three already existing metaheuristics to produce three TCTSP solvers. \textcolor{red}{For the empirical evaluation, \citet{Hurkala15} uses 45 randomly generated instances with 13 to 23 cities, which is almost twice smaller than the maximum number of cities that \citet{ariglianotime} can solve. This suggests that multiple time windows add additional complexity to the problem.} %The algorithms produce similar results. However, for some instances one algorithm produces better results, while for others it performs worse.}
 
 \subsection{Algorithms for the Time-Constrained Vehicle Routing Problem}
 \label{sec:tcvrpalgos}
-\textcolor{red}{
-This section outlines the main approaches to the Time-Constrained Vehicle Routing Problem (TCVRP), defined in Section \ref{npcompleteproblems}.}
+This section outlines the main approaches to the Time-Constrained Vehicle Routing Problem (TCVRP), often known as the Vehicle Routing Problem with Time Windows (VRPTW). TCVRP is a generalisation of TSP and it is defined in Section \ref{npcompleteproblems}.
 
-\textcolor{red}{
-A common approach in the literature is to model VRP and TCVRP as a \textit{set partitioning problem} \citep{Desrochers92,Agarwal89,Desrosiers84,Alvarenga07}. This can be done as follows. Let $\mathcal{R}$ be the set of all feasible routes, where $c_{r}$ denotes the cost of a route $r \in R$. Let $\delta{i,r}$ and $x_{r}$ be two variables that can be either 0 or 1. For each $r \in R$, $\delta{i,r}$ is 1 if $r$ visits city $i$ and $x_{r}$ is 1 if $r$ is used in the solution. Then, TCVRP can be formulated as the problem of choosing a set $\mathcal{S} \subset R$ with minimal cost, known as the \textit{set partitioning problem} (SPP), that is:}
+A common approach in the literature is to model VRP and TCVRP as a \textit{set partitioning problem} \citep{Desrochers92,Agarwal89,Desrosiers84,Alvarenga07}. This can be done as follows. Let $\mathcal{R}$ be the set of all feasible routes, where $c_{r}$ denotes the cost of a route $r \in R$. Let $\delta_{i,r}$ and $x_{r}$ be two variables that can be either 0 or 1. For each $r \in R$, $\delta_{i,r}$ is 1 if $r$ visits city $i$ and $x_{r}$ is 1 if $r$ is used in the solution. Then, TCVRP can be formulated as the problem of choosing a set $\mathcal{S} \subset R$ with minimal cost, known as the \textit{set partitioning problem} (SPP), that is:
 
 \begin{equation}
-\color{red}
 \label{eq:tcvrpobjfunc}
 \textrm{minimise } \sum_{r \in R} c_{r} x_{r},
 \end{equation}
 
 \begin{equation}
-\color{red}
 \label{eq:tcvrpconstraint1}
-\sum_{r \in R} \delta_{i,r} x_{r} = 1, \quad \forall i \in A,
+\sum_{r \in R} \delta_{i,r} x_{r} = 1, \quad \forall i \in A \setminus \{D\},
 \end{equation}
 
-\textcolor{red}{where constraint (11) imposes that each city is part of a set which is used in the solution. Some algorithms then construct a LP relaxation of this formulation and use the solution of the relaxation as a lower bound for a specific branch and bound procedure \citep{Desrochers92,Agarwal89}.}
+\textcolor{red}{where constraint (16) imposes that each city is part of a set which is used in the solution. Some algorithms then construct a LP relaxation of this formulation and use the solution of the relaxation as a lower bound for a specific branch and bound procedure \citep{Desrochers92,Agarwal89}.}
 
-\textcolor{red}{The method outlined above is somewhat similar to the AP LP relaxation for TSP and the relaxation for TCTSP discussed earlier. This shows that this general approach, dating back to the work of \citet{Dantzig54}, is highly applicable to different NP-hard problems.}
+The method outlined above is somewhat similar to the AP LP relaxation for TSP. This shows that this general approach, dating back to the work of \citet{Dantzig54}, is highly applicable to different NP-hard problems.
 
-\textcolor{red}{There is a number of approaches based on heuristics \citep{Alvarenga07,Cheng09}. \citet{Braysy05,Braysy05a} show the importance of good heuristics for tackling TCVRP. They present a review of some route construction and route improvement heuristics and attempt to outline a guideline for heuristics evaluation.}
-% A \textit{genetic algorithm (GA)} is a type of heuristic based on a natural selection process that mimics some processes occurring in biological evolution. %It is not an exact algorithm, i.e. it might take infinite amount of time to find an optimal solution. It is used when near-optimal solutions are acceptable. GA repeatedly modifies a population of individual solutions. At each step, it randomly selects individuals from the current population and uses them as parents to produce the children for the next generation. Over successive generations, the population ``evolves'' toward an optimal solution. Some algorithms further introduce the notion of ``mutation'', ``chromosomes'' as well as specific chromosome splitting algorithms.
+\textcolor{red}{
+The number of cites in a solved instance varies across the different algorithms that use set partitioning model. For instance, \citet{Agarwal89} solve instances with up to 25 cities in their computational experiments. \citet{Desrosiers84} work with real-world bus transportation problems and they solve instances with up to 55 schools, where schools are equivalent to cities. \citet{Desrochers92} is the first work capable of optimally solving instances with 100 cities. They say that ``... this problem size is six times larger than any reported to date by other published research.''}
 
-\textcolor{red}{Other algorithms for TCVRP include approximation algorithms and dynamic programming approaches. For more detailed review, we refer the interested reader further to \citet{Toth14}, where the practical aspects of TCVRP are discussed and common methods to solve TCVRP as well as some of its other variations are outlined.}
+Some approaches are based on heuristics \citep{Alvarenga07,Cheng09}. \citet{Braysy05,Braysy05a} show the importance of good heuristics for tackling TCVRP. They present a review of some route construction and route improvement heuristics and attempt to outline a guideline for the evaluation of heuristics.
+
+Other algorithms for TCVRP include approximation algorithms and dynamic programming approaches. For more detailed review, we refer the interested reader further to \citet{Toth14}, where the practical aspects of TCVRP are discussed and common methods to solve TCVRP as well as some of its other variations are outlined.
 
 \subsection{Summary}
-This section outlines some observations from the literature survey.
+\textcolor{red}{
+This section outlines some observations from the literature survey and shows their influence on the proposed approach in Section \ref{sec:proposedapproach}.}
 
-Existing literature shows that most approaches to NP-hard problems generally follow a similar pattern. For instance, this often is a relaxation to some other problem, the solution of which is used as a lower bound in a branch and bound procedure. All studied problems have successful solutions that employ IP and CP. Heuristics are topic of research and they are highly applicable for optimisation problems in general.
+\textcolor{red}{
+Existing literature shows that most approaches to NP-hard problems generally follow a similar pattern. For instance, this often is a relaxation to some other problem, the solution of which is used as a lower bound in a branch and bound procedure. Therefore, existing successful methods for NP-hard problems might give positive results for TP. Furthermore, efficient algorithms for TP might also perform well when applied to other NP-hard problems.}
 
-A successful methodology for one problem gives positive results when adapted and applied to a different problem. This can be explained as a consequence from a result of the NP-completeness theory, that is, if a polynomial time algorithm for one NP-complete problem is found, then all of them are solvable in polynomial time.
+\textcolor{red}{
+IP and CP are popular ways to tackle optimisation problems. They offer flexibility in terms of choosing decision variables and often more than model can be constructed for the same problem. IP and CP are successful for all studied problems. Thus, the proposed approach, discussed in Section \ref{sec:proposedapproach}, is to model and solve TP using both IP and CP.}
 
-From the two observations above we can deduce that:
-\begin{itemize}
-\item A successful method for some NP-hard problem might give positive results for TP.
-\item If an efficient algorithm for TP is found, then it might give good results when applied to other problems.
-\end{itemize}
+\textcolor{red}{
+The average size of TSP instances tackled by existing algorithms outweighs the size of the solvable instances of the other studied problems, where TSP is a special case of VRP, TCTSP and TCVRP. TCVRP is a generalisation of TSP, VRP and TCTSP and it seems to be the ``hardest''. We conjecture that there is a connection between the level of generalisation of the problem and its hardness. If this is true, then the size of the TP instances solved by the proposed algorithms might be  smaller, compared to studied problems.}
 
-Thus, our proposed approach is based on IP and CP: the two techniques that tend to give good results on the studied problems.
+\textcolor{red}{
+\citet{Baker83} observes that more constrained TCTSP instances are easier to solve. In Section \ref{cp} we gave examples of many successful heuristics which try to minimise the size of the domain of each variable. Therefore, the fact that TP has multiple constraints, could mean that instances with greater number of cities can be solved.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Proposed Approach}
-We model TP as Integer and Constraint Programming problems. The Constraint Programming (CP) approach is explained in Section \ref{subsec:tpcp} and the Integer Programming (IP) model is presented in Section \ref{subsec:tpip}.
-%Why is this approach chosen? ...
+\label{sec:proposedapproach}
+Based on the analysis of existing work in Section \ref{sec:existingwork}, we model TP as Integer and Constraint Programming problems. The Constraint Programming (CP) approach is explained in Section \ref{subsec:tpcp} and the Integer Programming (IP) model is presented in Section \ref{subsec:tpip}.
+
+\textcolor{red}{
+There are several reasons why two distinct TP models are constructed instead of one. First, each of the models will be used to verify the correctness of the other model. This verification step is needed, since the optimal solution of each TP instance used in the evaluation is unknown. Since each TP instance has only one optimal solution, if TP CP and TP IP return the same optimal solution for each instance, we will assume that both models are correct. A difference in their solutions would indicate a mistake in the implementation of either of them.}
+
+\textcolor{red}{
+Having two distinct models would enable us to compare the effectiveness of the used algorithms. Moreover, any conclusions on the problem will be less dependent on the chosen model.}
 
 \subsection{CP Model}
 \label{subsec:tpcp}
@@ -643,10 +704,9 @@ TP can then be formulated as the problem of minimising the objective function:
 \sum^{m-1}_{i = 0} c_{\mathcal{S}[i]}
 \end{equation}
 
-subject to constraints (13-19).
+subject to constraints (18-24).
 
 \begin{itemize}
-\color{red}
 \Item
 $\mathcal{S}[i] > 0 \wedge \mathcal{S}[i+1] = 0 , \quad (0 \leq i \leq z-1)$
 \end{itemize}
@@ -655,7 +715,7 @@ $\mathcal{S}[i] > 0 \wedge \mathcal{S}[i+1] = 0 , \quad (0 \leq i \leq z-1)$
 $\textrm{allDiff}(\mathcal{S}[0],...,\mathcal{S}[z-1])$
 \end{itemize}
 
-Constraint (13) restricts that once the end of the trip is reached at some position $z$, no flights are further added to $\mathcal{S}$. Constraint (14) enforces that every flight is taken only once, using an all-different constraint \citep{Hoeve01}.
+Constraint (18) restricts that once the end of the trip is reached at some position $z$, no flights are further added to $\mathcal{S}$. Constraint (19) enforces that every flight is taken only once, using an all-different constraint \citep{Hoeve01}.
 
 The trip properties are added to the model as follows:
 
@@ -671,7 +731,6 @@ $dom_{\mathcal{S}[i]} = \{j \in \{1,...,m\} : A^{d}_{j} = A^{a}_{p}, \, p = \mat
 \end{itemize}
 
 \begin{itemize}
-\color{red}
 % property 3:
 \Item
 $t_{p} + \Delta_{p} + C_{r} \leq t_{q}, \textrm{ where } p = \mathcal{S}[i], q = \mathcal{S}[i+1], r = A^{a}_{q}, \, (0 \leq i < z)$
@@ -686,7 +745,7 @@ $t_{q} + \Delta_{q} \leq T, \quad \textrm{ where } q = \mathcal{S}[z-1]$
 $\forall A_{k} \in D, \, |\{i: (0 \leq i < z) \wedge A^{a}_{\mathcal{S}[i]} = A_{k} \}| > 0 $
 \end{itemize}
 
-Constraint (15) is equivalent to trip property (1). It restricts the domains of the first and the $(z-1)^{th}$ variable in $\mathcal{S}$ to contain only flights that depart from/arrive at the home point. Trip property (2) is enforced by constraint (16). The domain of each variable in $\mathcal{S}$ is set to include only flights that depart from the arrival airport of the previous flight. Constraints (17) and (18) correspond to trip properties (3) and (4) respectively. Constraint (19) restricts that the number of the flights that arrive at every destination in the trip is positive, and thus enforces trip property (5).
+Constraint (20) is equivalent to trip property (1). It restricts the domains of the first and the $(z-1)^{th}$ variable in $\mathcal{S}$ to contain only flights that depart from/arrive at the home point. Trip property (2) is enforced by constraint (21). The domain of each variable in $\mathcal{S}$ is set to include only flights that depart from the arrival airport of the previous flight. Constraints (22) and (23) correspond to trip properties (3) and (4) respectively. Constraint (24) restricts that the number of the flights that arrive at every destination in the trip is positive, and thus enforces trip property (5).
 
 \subsection{IP Model}
 \label{subsec:tpip}
@@ -699,28 +758,25 @@ Let $m = |F|$. We introduce a variable $x_{i,j}$ for every $i \in \{0,...,m-1\}$
 The objective function of TP is to minimise:
 
 \begin{equation}
-\color{red}
 \label{eq:TPwithIPobj}
 \sum^{m-1}_{i} \sum^{m}_{j=0} c_{j=1} x_{i,j}
 \end{equation}
 
-subject to constraints (21-27).
+subject to constraints (26-32).
 
-First, we restrict that only one flight is taken at each step $i$ with constraint (21). Constraint (22) is equivalent to the all-different constraint (14): it enforces every flight to be taken at most once.
+First, we restrict that only one flight is taken at each step $i$ with constraint (26). Constraint (27) is equivalent to the all-different constraint (14): it enforces every flight to be taken at most once.
 
 \begin{itemize}
-\color{red}
 \Item
 $\forall i \, (0 \leq i < m), \quad \sum^{m}_{j = 1}x_{i,j} = 1 $
 \Item
 $\forall j \, (0 \leq j \leq m), \quad \sum^{m-1}_{i = 0}x_{i,j} = 1 $
 \end{itemize}
 
-\textcolor{red}{
-Our method to express the properties of a trip as integer linear inequalities is as follows. Assume that flight $z-1$ is the final flight returning to $A_{0}$, where $1 \leq z \leq m$. We add $m-z+1$ many $f_{0}$ flights, so that the variables $x_{z,0},...,x_{m,0}$ are all equal to 1. We do not add connection time when connecting from $A_{0}$ to $A_{0}$ as part of these flights.}
+Our method to express the properties of a trip as integer linear inequalities is as follows. Assume that flight $z-1$ is the final flight returning to $A_{0}$, where $1 \leq z \leq m$. We add $m-z+1$ many $f_{0}$ flights, so that the variables $x_{z,0},...,x_{m,0}$ are all equal to 1. We do not add connection time when connecting from $A_{0}$ to $A_{0}$ as part of these flights.
 
-\textcolor{red}{Constraints (23) and (24) enforce trip property (1). The first flight is restricted to depart from the home point and the last flight must arrive at the home point.
-From trip property (2) it follows that there must exist some $z < m$, $x_{z,j} = 1$, for which $j \neq 0$ and $A^{a}_{j} = A_{0}$. Thus, constraint (24) indirectly enforces trip property (1).}
+Constraints (28) and (29) enforce trip property (1). The first flight is restricted to depart from the home point and the last flight must arrive at the home point.
+From trip property (2) it follows that there must exist some $z < m$, $x_{z,j} = 1$, for which $j \neq 0$ and $A^{a}_{j} = A_{0}$. Thus, constraint (29) indirectly enforces that $A^{a}_{j} = A_{0}$.
 
 \begin{itemize}
 % property 1:
@@ -730,10 +786,9 @@ $\sum_{j \in S_{1}} x_{0,j} = 1, \quad \textrm{where } S_{1} = \{j \in \{1,...,m
 $x_{m,0} = 1$
 \end{itemize}
 
-Property (2) is enforced by defining two sets of flights $S_{1}$ and $S_{2}$, such that all flights in $S_{2}$ depart from the arrival airport of $S_{1}$. Constraint (25) restricts that every flight always departs from the arrival airport of the previous taken flight.
+Property (2) is enforced by defining two sets of flights $S_{1}$ and $S_{2}$, such that all flights in $S_{2}$ depart from the arrival airport of $S_{1}$. Constraint (30) restricts that every flight always departs from the arrival airport of the previous taken flight.
 
 \begin{itemize}
-\color{red}
 % property 2:
 \Item
 $\sum_{j \in S_{1}} x_{i-1,j} = \sum_{j^{\prime} \in S_{2}} x_{i,j^{\prime}}, \quad \forall i \, (1 \leq i \leq m) \wedge \forall y \in A, \textrm{ where}$
@@ -741,12 +796,9 @@ $\sum_{j \in S_{1}} x_{i-1,j} = \sum_{j^{\prime} \in S_{2}} x_{i,j^{\prime}}, \q
 $S_{1} = \{j \in \{0,...,m\} : A^{a}_{j} = y\} \textrm{ and } S_{2} = \{j^{\prime} \in \{0,...,m\} : A^{d}_{j^{\prime}} = y\}$
 \end{itemize}
 
-\textcolor{red}{
-Trip properties (3) and (4) are represented by constraint (26), which enforces that every flight $f_{j}$ cannot depart until the previous flight $f_{j^{\prime}}$ has arrived, adding connection time, if needed. The connection time $C^{\prime}_{r}$ is equal to the connection time of the arrival airport, unless the current flight is $f_{0}$.
-}
+Trip properties (3) and (4) are represented by constraint (31), which enforces that every flight $f_{j}$ cannot depart until the previous flight $f_{j^{\prime}}$ has arrived, adding connection time, if needed.% The connection time $C^{\prime}_{r}$ is equal to the connection time of the arrival airport, unless the current flight is $f_{0}$.
 
 \begin{itemize}
-\color{red}
 % property 3 and 4:
 \Item
 $x_{i+1,j} + \sum_{j^{\prime} \in F^{\prime}} x_{i,j^{\prime}} \leq 1, \quad \forall i \, (0 \leq i < m) \textrm{ and }  \forall j \, (0 \leq j \leq m)$
@@ -769,38 +821,86 @@ $\forall A_{k} \in D, \, \sum_{i=0}^{m-1} \sum_{j \in F_{k}} x_{i,j} \geq 1, \qu
 \end{itemize}
 
 \subsection{Modelling soft and hard constraints}
+\label{sec:modelsoftandhardconstr}
+Give an example of how would you model one constraint.
 
 \subsection{Choice of CP and IP solvers}
+\label{sec:cpandisolvers}
+\textcolor{red}{
+We were unable to find a solver which supports both IP and CP and this is the reason why the TP IP and CP models will be implemented using two different solvers. In order to decrease the implementation difference between the two models as much as possible, we have chosen solvers that support the same language, that is Java.}
 
-%Gurobi
+\textcolor{red}{
+Choco \citep{choco} is an open-source Java library for Constraint Programming that has wide range of already implemented constraints and heuristics. One only states the variables and constraints and then the problem is solved using specific internally implemented search algorithms. The TP CP model will be implemented using Choco.}
 
-\subsection{Experimental Datasets}
+\textcolor{red}{
+Gurobi is a mixed-integer solver first released in 2009. It is widely used mathematical optimisation tool \citep{gurobiusage} and it provides free licences to academia. We will use Gurobi for the implementation of the TP IP model.}
 
+\textcolor{red}{
+Both Gurobi and Choco are well-documented with good support from the community. They are also easy to set up and use. These are the main reasons why we choose to use them.}
+
+\subsection{Evaluation}
+\label{sec:evaluation}
+
+This section describes the planned procedure for each step of the evaluation. Section \ref{sec:evaluationgoals} describes the evaluation goals, what experiments need to be carried out and what will be measured. Section \ref{sec:datasets} gives more background of the datasets that we will use for the experiments.
+
+\subsubsection{Evaluation Goals}
+\label{sec:evaluationgoals}
+The goal of the evaluation is to analyse the efficiency and capability of the implemented algorithms for TP as well as learn more about the problem.
+
+\begin{itemize}
+\item What do we measure? Why? How are we going to measure it?
+\item Running times of the algorithms
+\item Maximum number of solvable instances
+\item We won't have the answers of which is the optimal solution for the corresponding dataset. This is why we will use CP and IP models as a way to verify our answers. When we get the same answer for the same instance on CP and IP, we will assume that this is the optimum.
+\end{itemize}
+
+We will measure:\\
+- cpu time\\
+- max number of cities in solved instances, depending on: ratio between destinations and connection cities; number of time windows; soft and hard constraints\\
+- comparisons of the best tours for the same instance, but with different soft and hard constraints\\
+- comparison between CP and IP models\\
+
+\subsubsection{Experimental Datasets}
+\label{sec:datasets}
 This section describes the instances that will be used for the empirical analysis of our algorithms for TP.
 
-\subsubsection{Skyscanner Flights API}
+\subsubsection*{How many cities should the instances have?}
+Based on the number of instances that previous work was able to solve, we predict that our algorithms can solve ...
+
+\subsubsection*{Skyscanner Flights API}
 Skyscanner is a metasearch engine that enables people to find and compare flights, hotels and cars for hire in terms of price, date and duration.
 They offer us access to their in-house flights API. Given a departure and an arrival airport and a date, it returns a set of flights with these attributes.
 
 The Skyscanner flights API will be used during the empirical analysis to construct TP instances with varying size and properties. Testing our algorithms on these instances will show the effectiveness of our algorithms on real-world problems.
 
-\subsection*{Generating instances from the Skyscanner data}
+\subsubsection*{Generating instances from the Skyscanner data}
 
-\subsubsection{Randomly Generated TP instances}
+\subsubsection*{Randomly Generated TP instances}
+
+We want to do this, but there might not be enough time.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Work Plan}
+\label{sec:workplan}
+%todo: maybe make a section about project requirements and decide which are of most priority
 
-Implement the IP and CP model for TP. (mid December-mid January)
+\textcolor{red}{
+Figure \ref{fig:estimation} is the work plan for the remaining of this project, provided that the project proposal is finished by 16$^{th}$ of December. There are 16 weeks of work until the submission deadline, which is on 21$^{st}$ of April. Each week is equal to 4 full work days on average. There are nine major tasks that need to be carried out, listed in column 2 in Figure \ref{fig:estimation}. For each task, column 3 shows a list of other tasks it depends on and column 4 is a time estimation in terms of weeks. Tasks which are not dependent can be carried out at the same time. The rest of the table shows the time window (marked in blue) within which the task is going to be carried out.}
 
-Implement support for the soft and hard constraints. (mid January - mid February)
+\textcolor{red}{
+Note that the task estimations are mainly based on previous experience and the actual time taken for each task may vary. We assume that there is a high chance that these estimations are wrong. This is why we have not allocated any tasks for week 14 and week 15 by marking this time period in yellow. This time is allocated for finishing up some tasks that may require more than the predicted time. In case all tasks are finished within the estimated time, these two weeks will be spent on improvement of some of the already finished tasks.}
 
-Generate TP instances for empirical evaluation. (mid February - 1st March)
+\textcolor{red}{
+We have allocated 1 week more for task 1 than for task 2, because of lack of experience in integer programming. The project paper will be written gradually, based on what has been done for each week. Only two weeks and a half are entirely dedicated on writing the report.}
 
-Run the algorithms on the test data and analyse results. (March-April)
+\begin{figure}
+\centering
+\caption{\textcolor{red}{All major tasks that need to be carried out, their time estimation and plan of completion.}}
+\label{fig:estimation}
+\includegraphics[width=18cm, height=7cm]{images/estimation.png}
+\end{figure}
 
-Submission deadline: 21 April 2017, 12PM 
-
+\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % it is fine to change the bibliography style if you want
 \bibliographystyle{plainnat}
