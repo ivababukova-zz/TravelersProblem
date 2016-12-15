@@ -54,13 +54,12 @@
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction}\label{intro}
-\textcolor{red}{
-The Traveller’s Problem (TP) is a computational task whose extensions and variations are often encountered by travellers around the world.
-Given a set of airports, a set of flights, a set of destinations that is a subset of the airports, and a special airport $A_{0}$, TP asks for finding a travel schedule that starts and finishes at $A_{0}$, visits all destinations and is in accordance with additional constraints specified by the traveller.}
+\section{Introduction}
+\label{intro}
+The Traveller’s Problem (TP) is a combinatorial optimisation problem whose extensions and variations are often encountered by travellers around the world.
+Given a set of airports, a set of flights, a set of destinations that is a subset of the airports, and a special airport $A_{0}$, a solution is a travel schedule that starts and finishes at $A_{0}$, visits all destinations and is in accordance with additional constraints specified by the traveller. For instance, the traveller may wish to spend a certain amount of days in each destination, to take a minimum number of connection flights, or to give minimum amount of money for flights. This work gives a formal description of TP and some of its main extensions, proves a result concerning its complexity, investigates existing methods to solve similar problems and presents a plan of action for modelling TP, generating TP datasets from the Skyscanner flights data and carrying out empirical evaluation.
 
-\textcolor{red}{This work gives a formal description of TP and some of its main extensions, proves a result concerning its complexity, investigates existing methods to solve problems of similar complexity and presents a plan of action for modelling TP and generating TP datasets.
-It is organised as follows. Section \ref{sec:tpformulation} gives a formal definition of TP, followed by series of example problem instances in Section \ref{sec:tpexample}. An important result about the complexity of TP is proved in Section \ref{sec:tpcomplexity}. Section \ref{sec:existingwork} is the background survey. It discusses common techniques to solve problems similar to TP with respect to their complexity and formulation. All problems investigated in this work are defined in Section \ref{npcompleteproblems}. Our proposed approach is presented in Section \ref{sec:proposedapproach}. This includes two distinct models for TP, evaluation plan and a discussion on the datasets that will be used for the experiments. Finally, Section \ref{sec:workplan} presents a detailed plan of work.}
+This work is organised as follows. Section \ref{sec:tpformulation} gives a formal definition of TP and Section \ref{sec:tpexample} presents some example TP instances. Section \ref{npcompleteproblems} lists the formulation of all problems studied in this work. Section \ref{sec:tpcomplexity} justifies the complexity of TP. Section \ref{sec:existingwork} presents the background survey, where we discuss common techniques to solve problems similar to TP with respect to their complexity and formulation. Section \ref{sec:requirements} presents the prioritised project requirements. Our proposed approach is described in Section \ref{sec:proposedapproach}. It includes two distinct models for TP, evaluation plan and a discussion about how datasets for experiments will be created. Finally, Section \ref{sec:workplan} presents a detailed plan of work and time estimation of each task of high priority.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Problem Formulation}
@@ -251,7 +250,6 @@ A set $A$ of $n$ cities, where $D \in A$ is the \textit{depot} and each city $i$
 \end{instance}
 
 \begin{question}
-\color{red}
 Is there a set $\mathcal{S}$ consisting of $m$ sequences $s_{1},...,s_{m}$, of the cities in $A$, called \textit{tours}
 where for every vehicle $k$ $(1 \leq k \leq m)$:
 \begin{itemize}
@@ -293,7 +291,7 @@ Set $A$ of $n$ cities, distance $d(A_{i}, A_{j})$ between each pair of cities $A
 \end{instance}
 
 \begin{question}
-Is there a permutation of cities $\gamma = \langle A_{\pi_{1}},...,A_{\pi_{n}} \rangle$ of $A$, such that each city $A_{\pi_{i}}$ is visited at time $t_{\pi_{i}}$, where $l_{\pi_{i}} \leq t_{\pi_{i}} \leq u_{\pi_{i}}$, \textcolor{red}{ $t_{\pi_{i}} \geq t_{\pi_{i-1}} + d(A_{\pi_{i-1}},A_{\pi_{i}})$ for $(2 \leq i \leq n)$, $t_{\pi_{i}} \geq t_{\pi_{n}} + d(A_{\pi_{n}},A_{\pi_{1}})$},
+Is there a permutation of cities $\gamma = \langle A_{\pi_{1}},...,A_{\pi_{n}} \rangle$ of $A$, such that each city $A_{\pi_{i}}$ is visited at time $t_{\pi_{i}}$, where $l_{\pi_{i}} \leq t_{\pi_{i}} \leq u_{\pi_{i}}$, $t_{\pi_{i}} \geq t_{\pi_{i-1}} + d(A_{\pi_{i-1}},A_{\pi_{i}})$ for $(2 \leq i \leq n)$, $t_{\pi_{1}} \geq t_{\pi_{n}} + d(A_{\pi_{n}},A_{\pi_{1}})$,
  and 
 $$L_{\gamma} = \bigg( \sum_{i=1}^{n-1} d(A_{\pi_{i}}, A_{\pi_{i+1}}) \bigg) + d(A_{\pi_{n}}, A_{\pi_{1}}) \leq B \quad \textrm{?}$$
 
@@ -315,7 +313,6 @@ A set $A$ of $n$ cities, where $D \in A$ is the \textit{depot} and each city $i$
 \end{instance}
 
 \begin{question}
-\color{red}
 Is there a set $\mathcal{S}$ consisting of $m$ sequences $s_{1},...,s_{m}$, of the cities in $A$, called \textit{tours}
 where for every vehicle $k$ $(1 \leq k \leq m)$:
 \begin{itemize}
@@ -402,50 +399,49 @@ We study 4 different NP-hard problems: TSP, JSSP, TCTSP and TCVRP, all defined i
 \subsection{Branch and Bound Algorithms}
 \label{branchandbound}
 %In this section we present a branch and bound based solutions for the TCTSP problem.
-\textcolor{red}{
-The term ``branch and bound'' was first coined by \citet{Little63} and it refers to a widely used method for solving optimisation problems. Given an instance $\pi$ of an optimisation problem, the method repeatedly breaks up the set of candidate solutions into successively smaller subsets, called \textit{subproblems} and calculates a bound on their value. If the bound of a subproblem  is ``worse'' than the best one found so far, the subproblem is discarded. Otherwise, it is added for future investigation. If its bound is the ``best'' found so far, its value is remembered and used for comparison with next subproblems. The process of generating subproblems is called \textit{branching}. We illustrate the branch and bound procedure with the next example.}
+
+The term ``branch and bound'' was first coined by \citet{Little63} and it refers to a widely-used method for solving optimisation problems. Given an instance $\pi$ of an optimisation problem, the method repeatedly breaks up the set of candidate solutions into successively smaller subsets, called \textit{subproblems} and calculates a bound on their value. If the bound of a subproblem  is ``worse'' than the best one found so far, the subproblem is discarded. Otherwise, it is added for future investigation. If its bound is the ``best'' found so far, its value is remembered and used for comparison with future subproblems. The process of generating subproblems is called \textit{branching}. We illustrate the branch and bound procedure with the next example.
+
 %The subproblems can be represented as the leaves of a rooted tree $T$, where the root of $T$ is $\pi$, each branch of $T$ represents an assignment of one variable and a node that has a child and is not the root node is called a \textit{branching node}. Branching node represents a partial solution of $\pi$.
 
 \begin{example}
 \label{ex:bandb}
-\color{red}
 Let $\pi$ be the following problem:
 
 $$ \textrm{minimise } x + y \textrm{,}$$
 
-where $x = 1, 2, 6$ and $y = 0, 5$.
+where $x \in \{1, 3, 6\}$ and $y \in \{0, 5\}$.
 
-Figure \ref{fig:bandb} illustrates two executions of the branch and bound procedure with different branching rule and the same bounding algorithm $\rho$ that returns 4 as an upper bound on the partial solutions. The procedure in Figure \ref{fig:bandb1} first branches on values for $y$ and the procedure in Figure \ref{fig:bandb2} first branches on values for $x$.
-One can see that the branching rule in Figure \ref{fig:bandb1} filters more subproblems than the branching rule Figure \ref{fig:bandb2}, which shows the importance of having good branching procedure.
+Figure \ref{fig:bandb} illustrates two possible executions of the branch and bound procedure, depending on the branching rule. Each execution is represented by a tree, where nodes represents subproblems and edges represents variable assignments. The root represents the entire solution set, the green node is an optimum, red nodes denote subproblem sets that were discarded because they have bounds that are ``worse'' compared to the ``best'' bound found so far. Without loss of generality, we assume that the nodes in each tree are visited in a pre-order traversal. For each node $i$ that represents a partial solution, a lower bound $l_{i}$ on its value is calculated, where $l_{i}$ is the sum of the value of all assigned variables. If $i$ represents a single feasible solution, an upper bound $u_{i}$ is calculated, equal to the sum of the assigned value to each variable.
 
-The choice of bounding algorithm is also important. Suppose $\rho$ returned 3 as an upper bound on the partial solution. Then only two feasible solutions would be checked in Figure \ref{fig:bandb2}.
+In the left-most tree, the branching rule explores the feasible solutions, assigning values for $x$ and $y$ in a non-increasing order. One can see that it needs to check all possible assignments of $x$ and $y$ in order to find an optimum. This is due to the poor choice of branching rule, which leads to a series of ineffective bounds which can not discard subproblems.
+
+The right-most tree has branching rule that explores the feasible solutions, assigning values for $x$ and $y$ in a non-decreasing order. This is more efficient branching rule for $\pi$, since the size of the tree is smaller. This is because the first encountered feasible solution is an optimal assignment for $x$ and $y$, which sets $1$ as an upper bound on the value of the feasible solutions, which discards partial solutions.
 
 \begin{figure}
 \centering
 \begin{minipage}{.5\textwidth}
 \centering
-\includegraphics[width=4cm, height=3cm]{images/bandb1.png}
-\caption{Branching rule 1}
-\label{fig:bandb1}
+\includegraphics[width=4.5cm, height=2.4cm]{images/fullsearch.png}
 \end{minipage}%
+% \begin{minipage}{.3\textwidth}
+% \centering
+% \includegraphics[width=4cm, height=2.4cm]{images/halfsearch.png}
+% \end{minipage}
 \begin{minipage}{.5\textwidth}
 \centering
-\includegraphics[width=5cm, height=3cm]{images/bandb2.png}
-\caption{Branching rule 2}
-\label{fig:bandb2}
+\includegraphics[width=3.8cm, height=2.4cm]{images/smallsearch.png}
 \end{minipage}
-\caption{\textcolor{red}{All subproblems for $\pi$ checked by a branch and bound procedure with upper bound 4 and two different branching rules. Green and red nodes denote assignments with value less than and greater than the upper bound respectively.}}
+\caption{All subproblems for $\pi$ checked by a branch and bound procedure with two different branching rules.}
 \label{fig:bandb}
 \end{figure}
 \end{example}
 
-\textcolor{red}{
-As shown in Example \ref{ex:bandb}, the choice of bounding and branching procedures is crucial to the size of the explored search space. Existing literature has spent substantial effort in constructing efficient algorithms for branching and bounding \citep{Little63,Dantzig54, HeldK70}. Examples of such algorithms are discussed throughout this work for the studied NP-hard problems.}
+As shown in Example \ref{ex:bandb}, the choice of bounding and branching procedures is crucial to the size of the explored search space. Existing literature has spent substantial effort in constructing efficient algorithms for branching and bounding \citep{Little63,Dantzig54, HeldK70}. Examples of such algorithms are discussed throughout this work for the studied NP-hard problems.
 
 %\citet{Christofides81} say that ``... one of the most successful methods of solving routing problems is by the use of branch and bound algorithms where the effectiveness of the bounds is the most important parameter that determines the efficiency of the complete algorithm.'' There are different methods for computing bounds, some of which are discussed in this work (the AP relaxation, the set-partitioning model, etc.)
 
-\textcolor{red}{
-Branch and bound algorithms are one of the most successful methods for solving optimisation problems \citep{Christofides81} and they are typically implemented in Constraints Programming (CP) and Integer Programming (IP) solvers \citep{Leyffer01,Quesada92}.}
+Branch and bound algorithms are one of the most successful methods for solving optimisation problems \citep{Christofides81} and they are typically implemented in Constraints Programming (CP) and Integer Programming (IP) solvers \citep{Leyffer01,Quesada92}.
 
 \subsection{Linear and Integer Programming}
 \label{ip}
@@ -554,9 +550,7 @@ In the existing work, this property is used to derive a lower bound on the cost 
 
 \citet{Dantzig54} solve the constructed TSP model using a novel method for that time, which they call the ``cutting-plane method''. We point the interested reader back to \citep{Dantzig54} and \citep{Dantzig59}, where in the latter the cutting-plane method is explained in more detail using a 10 city TSP instance as an example.
 
-\textcolor{red}{
-The number of solved instances using the AP relaxation varies. \citet{Dantzig54} executes the algorithm by hand on a 49 city problem instance and there is no data on the performance of the algorithm. \citet{Jonker80} report on experiments with up to 150 city instances solved. However, the algorithm's running time is not specified. The greatest number of cities solved by \citet{Fischetti92} is 200. The longest time taken to solve a 200 city instance is 4.42 seconds, using a VAX 11/780 computer architecture.
-}
+The number of solved instances using the AP relaxation varies. \citet{Dantzig54} executes the algorithm by hand on a 49 city problem instance and there is no data on the computational performance of the algorithm. \citet{Jonker80} report on experiments with up to 150 city instances solved. However, the algorithm's running time is not specified. The greatest number of cities solved by \citet{Fischetti92} is 200. The longest time taken to solve a 200 city instance is 4.42 seconds, using a VAX 11/780 computer architecture.
 
 % \textcolor{red}{
 % \citet{Applegate03} implements a modification of the AP relaxation into Concorde \citep{concorde}, which is a TSP Solver that implements a variety of other techniques and heuristics. It ``is widely regarded as the fastest TSP solver, for large instances, currently in existence.'' \citep{Mulder03}. Concorde is capable of finding a feasible tour for instances with 1,000,000 cities or more \citep{Applegate03}.}
@@ -695,13 +689,11 @@ Heuristics-based approaches can also find solutions to instances with up to 100 
 
 This section outlines the main observations from the literature survey and shows their influence on the proposed approach in Section \ref{sec:proposedapproach}.
 
-\textcolor{red}{
-Most of the existing approaches to NP-hard problems generally follow a similar pattern. For instance, this can be a relaxation to another problem which need not be polynomial-time solvable in order to obtain a lower bound on the solution, used as part of a branch and bound procedure. Many algorithms model the problem as a constraint satisfaction problem or as a system of linear integer inequalities.} 
+Most of the existing approaches to NP-hard problems generally follow a similar pattern. For instance, this can be a relaxation to another problem which need not be polynomial-time solvable in order to obtain a lower bound on the solution, used as part of a branch and bound procedure. Many algorithms model the problem as a constraint satisfaction problem or as a system of linear integer inequalities.
 
-\textcolor{red}{
-The average size of TSP instances tackled by existing algorithms outweighs the size of the solvable instances of the other studied problems, where TSP is a special case of VRP, TCTSP and TCVRP. TCVRP is a generalisation of TSP, VRP and TCTSP and it is the problem with smallest maximum size of solved instances by the existing literature. This observation is later used in Section \ref{sec:evaluation} when deciding on feasible sizes of the datasets.}
+The average size of TSP instances tackled by existing algorithms outweighs the size of the solvable instances of the other studied problems, namely VRP, TCTSP and TCVRP for which TSP is a special case. TCVRP is a generalisation of each of TSP, VRP and TCTSP and it is the problem with smallest maximum size of solved instances by the existing literature. This observation is later used in Section \ref{sec:evaluation} when deciding on feasible sizes of the datasets.
 
-\textcolor{red}{When it is not necessarily vital that a given instance of TP is solved to optimality, there are algorithms that can return their ``best'' solution found so far after a given period of time. CP or IP solvers for instance offer this flexibility. Typically, much larger instances can be solved, since the algorithm does not need to explore the entire search space to prove the optimality of a solution. This will be investigated during the project evaluation with TP instances.}
+When it is not necessarily vital that a given instance of TP is solved to optimality, there are algorithms that can return their ``best'' solution found so far after a given period of time. CP or IP solvers for instance offer this flexibility. Typically, much larger instances can be solved, since in many cases the algorithm does not need to explore the entire search space to prove the optimality of a solution, that may have been found relatively early on in search (and which itself may even be optimal). This will be investigated during the project evaluation.
 
 % \textcolor{red}{
 % In Section \ref{cp} we gave examples of many successful heuristics for minimising the size of variables' domains. Therefore, the fact that TP has multiple constraints could mean that the larger size of solvable TP instances, compared to other studied problems.  In Section \ref{sec:evaluationgoals} we explain our predictions, noting that the size of a TP instance can vary with respect to multiple entities and that a feasible solution often need not be an optimal solution.} \textcolor{blue}{Obtaining a good }
@@ -714,13 +706,12 @@ The average size of TSP instances tackled by existing algorithms outweighs the s
 \begin{figure}
 \centering
 \includegraphics[width = 16cm, height = 6 cm]{images/requirements.png}
-\caption{\textcolor{red}{Project requirements.}}
+\caption{Project requirements.}
 \label{fig:requirements}
 \end{figure}
 
 %%% do I need to write how I captured these requirements?
-\textcolor{red}{
-This section lists the project requirements. They are separated in three categories: must have, should have and could have, based on the MoSCoW technique for requirements prioritization \citep{ash2007moscow}. Requirements under the \textit{must have} category are critical to the success of the project. \textit{Should have} requirements are important, but not necessary for the successful completion of the project. \textit{Could have} requirements are desirable, but not necessary and their purpose is to improve the overall quality of the project. Figure \ref{fig:requirements} shows all project requirements. To refer to a specific requirement using its \textit{id}, which is equal to the string composed of the first letter of the requirement category (M, S or C) and the number of the row the requirement is in. For instance, requirement ``Improve the UI so that it is easier to interact with'' has id $C1$. This list is later referred to in Section \ref{sec:workplan} where we describe the work plan.}
+This section lists the project requirements. They are separated into three categories: must have, should have and could have, based on the MoSCoW technique for requirements prioritization \citep{ash2007moscow}. Requirements under the \textit{must have} category are critical to the success of the project. \textit{Should have} requirements are important, but not necessary for the successful completion of the project. \textit{Could have} requirements are desirable, but not necessary and their purpose is to improve the overall quality of the project. Figure \ref{fig:requirements} shows all project requirements. To refer to a specific requirement we use its \textit{id}, which is the string composed of the first letter of the requirement category (M, S or C) and the number of the row the requirement is in. For instance, requirement ``Define additional soft and hard constraints and implement them'' has id $C1$. This list is later referred to in Section \ref{sec:workplan} where we describe the work plan.
 
 % \begin{table}
 % \centering
@@ -751,8 +742,7 @@ This section lists the project requirements. They are separated in three categor
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Proposed Approach}
 \label{sec:proposedapproach}
-Based on the analysis of existing work in Section \ref{sec:existingwork}, we model TP as Integer and Constraint Programming problems. The Constraint Programming (CP) approach is explained in Section \ref{subsec:tpcp} and the Integer Programming (IP) model is presented in Section \ref{subsec:tpip}. \textcolor{red}{
-Having two distinct TP models would allow for using each of the models as an additional verification step for the correctness of the other. Since the optimal solutions of each TP instance have equal numeric value, if TP CP and TP IP return the same numeric value of an optimal solution for each instance, we will assume\footnote{One should note that this does not prove their correctness.} that both models are correct. A difference in their solutions would indicate a mistake in either of them. Having more than one TP algorithm also gives opportunities for performing more detailed evaluation, learn more about the problem and about CP and IP.}
+Based on the analysis of existing work in Section \ref{sec:existingwork}, we model TP as Integer and Constraint Programming problems. The Constraint Programming (CP) approach is explained in Section \ref{subsec:tpcp} and the Integer Programming (IP) model is presented in Section \ref{subsec:tpip}. Having two distinct TP models would allow for each of the models to be used as an additional verification step for the correctness of the other. Since optimal solutions of each TP instance have equal numeric value, if TP CP and TP IP return the same numeric value of an optimal solution for a large number of sufficiently-large instances, this will provide strong evidence that both models are correct. A difference in their solutions would indicate a mistake in either of them. Having more than one TP algorithm also gives opportunities for performing more detailed evaluation, learn more about the problem and about CP and IP.
 
 \subsection{CP Model}
 \label{subsec:tpcp}
@@ -884,26 +874,23 @@ $\forall A_{k} \in D, \, \sum_{i=0}^{m-1} \sum_{j \in F_{k}} x_{i,j} \geq 1, \qu
 
 \subsection{Modelling soft and hard constraints}
 \label{sec:modelsoftandhardconstr}
-\textcolor{red}{
-This section shows how soft and hard constraints in Section \ref{sec:tpformulation} can be added to the constructed models for TP, using hard constraint 2 in Section \ref{subsec:hardconstraints} as an example.}
 
-\textcolor{red}{Let $U \subseteq D$ be the set of all destinations which must be visited at some specific date. The TP formulation allows for using destination airports as connections. Therefore, pruning all flights departing from or arriving at a constrained destination $A_{i}$ before or respectively after the required date $\tau_{i}$ for $A_{i}$ potentially removes feasible solutions. Instead, we add constraint (27) that ensures that for every destination $A_{i}$ in $U$, there is a scheduled flight arriving at $A_{i}$ before the required date $\tau_{i}$ and the next scheduled flight departs from $A_{i}$ after $\tau_{i}$.}
+This section shows how soft and hard constraints in Section \ref{sec:tpformulation} can be added to the constructed models for TP, using hard constraint 2 in Section \ref{subsec:hardconstraints} as an example.
+
+Let $U \subseteq D$ be the set of all destinations which must be visited at some specific date. The TP formulation allows for destination airports to be used as connections. Therefore, pruning all flights departing from or arriving at a constrained destination $A_{i}$ before or respectively after the required date $\tau_{i}$ for $A_{i}$ potentially removes feasible solutions. Instead, we add constraint (27) which ensures that for every destination $A_{i}$ in $U$, there is a scheduled flight arriving at $A_{i}$ before the required date $\tau_{i}$ and the next scheduled flight departs from $A_{i}$ after $\tau_{i}$.
 
 \begin{itemize}
-\color{red}
 \Item
 $\forall A_{i} \in U, \, \exists j \, (0 \leq j < z) \textrm{, such that:}  $
 \item[]
 $A^{a}_{\mathcal{S}[j]} = A_{i},$
 \item[]
 $t_{\mathcal{S}[j]} + \Delta_{\mathcal{S}[j]} + C_{i} < \tau_{i}, \textrm{ and}$
-% \item[]
-% $A^{d}_{\mathcal{S}[j+1]} = A_{i}, \textrm{and}$
 \item[]
-$t_{\mathcal{S}[j+1]} > \tau_{i}$
+$t_{\mathcal{S}[j+1]} > \tau_{i} + 1$ \footnote{We assume that the traveller has to stay at $A_{i}$ for at least one day after the required date $\tau_{i}$.}
 \end{itemize}
 
-\textcolor{red}{Other required soft or hard constraints can be enforced using similar methods.}
+Constraint (27) is defined as an addition to the CP model presented in Section \ref{subsec:tpcp}. Other required soft or hard constraints can be enforced using similar methods for either of the two models.
 
 % \begin{itemize}
 % \Item
@@ -944,89 +931,87 @@ Both Gurobi and Choco are well-documented with good support from the community a
 \subsection{Evaluation}
 \label{sec:evaluation}
 
-\textcolor{red}{
-This section is the plan of the project evaluation. The main goal of the evaluation is to analyse the implemented algorithms for TP and learn more about the problem and its extensions and variations. To achieve this, it is important to create instances that are good representatives of TP and to measure appropriate metrics. 
-Section \ref{sec:evaluationgoals} presents our choice of evaluation metrics and Section \ref{sec:datasets} gives more background on the experimental datasets. %Most of the decisions in this section are mainly based on observations from previous work.
-}
+This section is the plan of the project evaluation. The main goal of the evaluation is to analyse the implemented algorithms for TP and learn more about the problem and its extensions and variations. To achieve this, it is important to create instances that are good representatives of instances of TP that are likely to be encountered in practice and to measure appropriate metrics. 
+Section \ref{sec:evaluationgoals} presents our choice of evaluation metrics and Section \ref{sec:datasets} gives more background on the experimental datasets.
 
 \subsubsection{Evaluation Measurements}
 \label{sec:evaluationgoals}
 
-The main metrics that will be taken when running the algorithms are the following:
-% What do we measure? Why? How are we going to measure it?
+The main metrics that will be taken when running each of the algorithms are the following:
 \begin{enumerate}
-\color{red}
 \item The number of \textit{search nodes} taken to solve each instance.
 \item The running time of each of the algorithms for each instance.
-\item What is the ``best'' solution when running each algorithm for a given period of time? How far from an optimum is it?
-\item An optimal solution for each instance, if solutions exist.
-\item All solutions for each instance, if they exist.
-\item The properties of the largest instance solved by each algorithm.
+\item The ``best'' returned solution when running for a given period of time and how far from an optimum it is.
+\item The number of optimal solutions for each instance.
+\item The number of airports, the number of destinations, the size of the flights set and the travel time period of the largest instances.
 \end{enumerate}
 
-\textcolor{red}{
-A \textit{search node} denotes the number of recursive calls taken to find a solution if the problem is soluble or prove that the problem is insoluble. This metric is used by the existing literature to measure the hardness of an instance \citep{McCreesh16}.}
+The number of \textit{search nodes} denotes the number of recursive calls taken to find a solution if the problem is soluble or prove that the problem is insoluble. This metric is used by the existing literature to measure the hardness of an instance \citep{McCreesh16}.
 
-\textcolor{red}{By collecting metrics 1 and 2, we aim to learn more about how the size of TP instances influences the behaviour of the implemented algorithms. Metric 3 measures the trade-off between computation time and optimality of a solution. Metrics 4, 5 and 6 will show us more about the properties of the dataset.}
+For metric 3, we measure how far from an optimum the returned solution is by comparing it with an optimal solution, returned after running the exact TP algorithms. We plan to find optimal solutions with respect to the following objective functions:
+
+\begin{itemize}
+\item Minimise the sum of the cost of each flight;
+\item Minimise the length of the flights schedule;
+\item Minimise the number of airports taken as connections;
+\item Minimise the time spent on flying;
+\item Minimise the connection time;
+\item Minimise a set of the aforementioned objectives. 
+\end{itemize}
+
+By collecting metrics 1 and 2, we aim to learn more about how the size of TP instances influences the behaviour of the implemented algorithms. Metric 3 measures the trade-off between computation time and optimality of a solution. Metric 4 shows some of the properties of the datasets. Metric 5 aims to show the properties of the largest solvable instance.
 
 \subsubsection{Experimental Datasets}
 \label{sec:datasets}
 
-\textcolor{red}{This section describes the planned procedures for generating the datasets for evaluation and their desired properties.}
+This section describes the planned procedures for generating the datasets for evaluation and their desired properties.
 
 \subsubsection*{The size of the TP instances}
-\textcolor{red}{
-The TP instances can be divided in four main categories with respect to their size. Category 1 instances should be easy to solve by hand and they will be constructed for testing purposes. Category 2 should be of ``medium'' size: neither too easy, nor too hard to solve in terms of search nodes and running time. Category 3 should consist of larger and thus more challenging instances. Category 4 instances will aim to test the maximum capability of the evaluated algorithms.}
+The TP instances can be divided in four main categories with respect to their size. Category 1 instances should be easy to solve by hand and they will be constructed for testing purposes. Category 2 should be of ``medium'' size: neither too easy, nor too hard to solve in terms of search nodes and running time. Category 3 should consist of larger and thus more challenging instances. Category 4 instances will aim to test the maximum capability of the evaluated algorithms.
 
-\textcolor{red}{
-We note that the size of TP instances without including any additional soft and hard constraints can vary with respect to three main properties: the number of flights $m$, the holiday duration $T$ and the number of airports $n$, where $n$ is equal to the sum of the number of destinations $n_{d}$, connection airports $n_{c}$ plus 1 (for the home point $A_{0}$). A TP instance can be small with respect to some parameters and large with respect to others. We will aim to generate a dataset that captures this variety.}% by constructing XXX instances from each category.
+We note that the size of TP instances without including any additional soft and hard constraints can vary with respect to three main properties: the number of flights $m$, the holiday duration $T$ and the number of airports $n$, where $n$ is equal to the sum of the number of destinations $n_{d}$, connection airports $n_{c}$ plus 1 (for the home point $A_{0}$). A TP instance can be small with respect to some parameters and large with respect to others. We will aim to generate a dataset that captures this variety.% by constructing XXX instances from each category.
 
-\textcolor{red}{
-Our decision on the size of the instances from each of the categories is based on  the size of the problems, solved by the existing literature. Problems belonging to category 1 will have $n \leq 10$, where $n_{d} \leq 4$, $T \leq 10$ and $m \leq 20$. Category 2 TP instances will have $10 \leq n \leq 30$, where $4 \leq n_{d} \leq 8$, $10 \leq T \leq 20$ and $30 \leq m \leq 50$. Category 3 problems will have $30 \leq n \leq 60$, where $15 \leq n_{d} \leq 60$, $20 \leq T \leq 30$ and $300 \leq m \leq 500$. The size of category 4 instances will be decided based on the running time results with the previous three categories. Taking the largest instance from category 3, we will iteratively increase its size and run the implemented algorithms with it until the instance becomes insoluble.}
-
+Our decision on the size of the instances from each of the categories is based on  the size of the related problems, solved by the existing literature. Problems belonging to category 1 will have $n \leq 10$, where $n_{d} \leq 4$, $T \leq 10$ and $m \leq 20$. Category 2 TP instances will have $10 \leq n \leq 30$, where $4 \leq n_{d} \leq 8$, $10 \leq T \leq 20$ and $30 \leq m \leq 50$. Category 3 problems will have $30 \leq n \leq 60$, where $15 \leq n_{d} \leq 30$, $20 \leq T \leq 30$ and $300 \leq m \leq 500$. The size of category 4 instances will be decided based on the running time results with the previous three categories. Taking the largest instance from category 3, we will iteratively increase its size and run the implemented algorithms with it until the instance becomes insoluble.
 
 \subsubsection*{Constructing TP instances from the Skyscanner flights data}
-\textcolor{red}{
-Skyscanner is a metasearch engine that enables people to find and compare flights in terms of price, date and duration. Skyscanner offers us some of their flights data for the project empirical evaluation. The data that we will be given consists of all flights that depart from and arrive at any airport in the world for the course of two months. Each flight $f^{\prime}_{j}$ has departure and arrival airport $A^{d}_{j}$ and $A^{a}_{j}$ respectively, duration $\Delta^{\prime}_{j}$, price $c^{\prime}_{j}$, departure date $g^{\prime}_{j}$ and departure time $q^{\prime}_{j}$. Each flight $f^{\prime}_{j}$ in the given data has to be transformed to a valid TP flight $f_{j}$. This can be done as follows.}
+
+Skyscanner is a metasearch engine that enables people to find and compare flights in terms of price, date and duration. Skyscanner offers us some of their flights data for the project empirical evaluation. The data that we will be given consists of all flights that depart from and arrive at any airport in the world for the course of two months. Each flight $f^{\prime}_{j}$ has departure and arrival airport $A^{d}_{j}$ and $A^{a}_{j}$ respectively, duration $\Delta^{\prime}_{j}$, price $c^{\prime}_{j}$, departure date $g^{\prime}_{j}$ and departure time $q^{\prime}_{j}$. Each flight $f^{\prime}_{j}$ in the given data has to be transformed to a valid TP flight $f_{j}$. This can be done as follows.
 
 \begin{enumerate}
-\color{red}
-\item For each $f^{\prime}_{j}$, add $A^{d}_{j}$ and $A^{a}_{j}$ to $f_{j}$.
-\item For each $f^{\prime}_{j}$, obtain $\Delta_{j}$, equal to $\Delta^{\prime}_{j}$, represented as a fraction of a day. Add $\Delta_{j}$ to $f_{j}$.
+\item For each $f^{\prime}_{j}$, associate $A^{d}_{j}$ and $A^{a}_{j}$ to $f_{j}$.
+\item For each $f^{\prime}_{j}$, obtain $\Delta_{j}$, equal to $\Delta^{\prime}_{j}$, represented as a fraction of a day.
 \item %Derive a positive rational number $g_{j}$ from $g^{\prime}_{j}$ for each $f^{\prime}_{j}$ as follows. 
 Store the departure date of the earliest flight in the data in a separate variable $T_{0}$. For each flight $f^{\prime}_{j}$, $g_{j}$ is equal to the number of days difference between $g^{\prime}_{j}$ and $T_{0}$.
 \item For each $f^{\prime}_{j}$, obtain $q_{j}$, equal to $q^{\prime}_{j}$, represented as a fraction of a day.
-\item Add the date $t_{j}$ to each flight $f_{j}$, where $t_{j} = g_{j} + q_{j}$.
+\item For each $f_{j}$, $t_{j} = g_{j} + q_{j}$.
+\item Choose some currency $\epsilon$. For each $f^{\prime}_{j}$, obtain $c_{j}$, equal to $c^{\prime}_{j}$ converted to $\epsilon$.
 \end{enumerate}
 
-\textcolor{red}{
-Let $\mathcal{F}$ be the transformed Skyscanner flights data and let $\mathcal{A}$ be the set of all airports in the world. With the defined size ranges for each of the four categories, we compose $A$ by picking airports from $\mathcal{A}$ and then compose $F$ by picking flights from $\mathcal{F}$ that only fly to and from airports in $A$ and have flight date difference between other flights less than $T$.}
+Let $\mathcal{F}$ be the transformed Skyscanner flights data and let $\mathcal{A}$ be the set of all airports in the world. With the defined size ranges for each of the four categories, we compose $A$ by picking airports from $\mathcal{A}$ and then compose $F$ by picking flights from $\mathcal{F}$ that only fly to and from airports in $A$ and depart at time greater than or equal to $T_0'$ and arrive by time that is less than or equal to $T_0'+T$, where $T_0'$ is an arbitrary chosen integer between 0 and the number of days difference between the earliest and the latest flight in $\mathcal{F}$.
 
-\textcolor{red}{
-Due to the expected enormous size of $\mathcal{F}$, we need to be specifically careful not to construct only instances without any solution, because this would not allow for taking all planned measurements. We will need to ensure that $F$ contains at least one flight from and to each destination \footnote{Even if this is the case, instances can still have no solutions.}. Ideally, the dataset should contain few instances without solution and the majority of instances with more than one solutions.}
+Due to the expected enormous size of $\mathcal{F}$, we need to be specifically careful not to construct only instances without any solution, because this would not allow for taking all planned measurements. We will need to ensure that $F$ contains at least one flight from and to each destination \footnote{Even if this is the case, instances can still have no solutions.}. Ideally, the dataset should contain few instances without a solution and the majority of instances with more than one solution.
 
 \subsubsection*{Randomly Generated TP instances}
-
-This task is of low priority and we will do it if we have time.
+This task is of low priority and it will be done only after all high priority tasks are finished earlier than expected.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Work Plan}
 \label{sec:workplan}
 
-\textcolor{red}{
-Figure \ref{fig:estimation} presents a plan of work on the must-have and should-have tasks for the remainder of this project, assuming that the project proposal is finished by 16$^{th}$ of December \footnote{However, the proposal submission deadline is 18$^{th}$ of December}. There are 16 weeks of work until the submission deadline, which is on 21$^{st}$ of April. Each week is equal to 4 full work days dedicated to this project on average. The must-have and should-have tasks from the requirements capture in Figure \ref{fig:requirements} are listed in column 1 in Figure \ref{fig:estimation}, referenced by their ids. Column 2 is a time estimation for each corresponding task in terms of weeks. The shade of blue is an indication of the amount of effort planned to be spent on the particular task for the particular week. For instance, the project paper (task $M7$) will be written gradually every week with more emphasis during week 16.}
+Figure \ref{fig:estimation} presents a plan of work on the must-have and should-have tasks for the remainder of this project, assuming that the project proposal is finished by 16$^{th}$ of December \footnote{However, the proposal submission deadline is 18$^{th}$ of December}. There are 16 weeks of work until the submission deadline, which is on 21$^{st}$ of April. Each week is equal to 4 full work days dedicated to this project on average. The must-have and should-have tasks from the requirements capture in Figure \ref{fig:requirements} are listed in column 1 in Figure \ref{fig:estimation}, referenced by their ids. Column 2 is a time estimation for each corresponding task in terms of weeks. The shade of blue is an indication of the amount of effort planned to be spent on the particular task for the particular week. For instance, the project paper (task $M7$) will be written gradually every week with more emphasis during week 16.
 
-\textcolor{red}{
-Note that the task estimations are mainly based on previous experience and the actual time taken for each task may vary. Weeks 9 and 15, both marked in orange, have no assigned tasks. This time is allocated for finishing up some tasks that require more than the predicted time. In case all tasks are finished within the estimated time, these two weeks will be spent on implementing some of the could-have requirements, shown in Figure \ref{fig:requirements}.}
+Note that the task estimations are mainly based on previous experience and the actual time taken for each task may vary. Weeks 9 and 15, both marked in orange, have no assigned tasks. This time is allocated for finishing up some tasks that require more than the predicted time. In case all tasks are finished within the estimated time, these two weeks will be spent on implementing some of the could-have requirements, shown in Figure \ref{fig:requirements}.
 
 \begin{figure}
 \centering
-\caption{\textcolor{red}{The time estimation and plan of completion for each project requirement of high importance.}}
+\caption{The time estimation and plan of completion for each project requirement of high importance.}
 \label{fig:estimation}
 \includegraphics[width=16cm, height=6cm]{images/estimation.png}
 \end{figure}
 
 \clearpage
+
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % it is fine to change the bibliography style if you want
 \bibliographystyle{plainnat}
